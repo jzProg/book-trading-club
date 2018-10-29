@@ -18,6 +18,7 @@
                         :username = "username"
                         :logout = "logout"
                         :notifications = "getNotifications"
+                        :messages = "getMessages"
                         @close = "onOptionsClose">
           </OptionsModal>
         </div>
@@ -36,12 +37,13 @@
   import Vue from 'vue';
   import bus from "@/common/eventBus";
   import firebaseConfigProperties from "@/common/firebaseConfigProperties";
+  import urlAuthMixin from "@/common/helpers/urlAuth";
   import OptionsModal from '@/components/modals/OptionsModal';
   import { mapActions, mapGetters, mapMutations } from 'vuex';
 
   export default {
     name: 'app',
-    mixins: [firebaseConfigProperties],
+    mixins: [firebaseConfigProperties, urlAuthMixin],
     components: { OptionsModal },
     data() {
       return {
@@ -57,6 +59,7 @@
         'userLogout',
         'clearUserData',
         'fetchNotifications',
+        'fetchTradeMessages',
       ]),
       showOptions() {
         this.showOptionsModal = true;
@@ -71,17 +74,6 @@
           this.$router.push('/');
         });
       },
-      isExcludedPage () {
-        const fullUrl = window.location.href;
-        return fullUrl.substr(fullUrl.indexOf('#') + 2).includes('profile');
-      },
-      isLoggedIn() {
-        return localStorage.getItem('token');
-      },
-      notAuthPage() {
-        const fullUrl = window.location.href;
-        return fullUrl.substr(fullUrl.indexOf('#') + 2) !== 'home';
-      }
     },
     created() {
       // Initialize Firebase
@@ -95,6 +87,7 @@
           this.username = user.displayName;
           this.setLoginUsername({ value: user.displayName });
           this.fetchNotifications(user.displayName);
+          this.fetchTradeMessages(user.displayName);
   //        var email = user.email;
   //        var emailVerified = user.emailVerified;
   //        var photoURL = user.photoURL;
@@ -108,12 +101,14 @@
         } else {
           console.log('loggedOut!');
           this.username = '';
+          localStorage.setItem('token', '');
         }
       });
     },
     computed: {
       ...mapGetters([
         'getNotifications',
+        'getMessages',
       ]),
       numOfUnreadNotifications() {
           return this.getNotifications ? this.getNotifications.length : 0;

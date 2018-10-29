@@ -9,12 +9,16 @@ export default new Vuex.Store({
       booksPosted: [],
       loginUsername: '',
       notifications: [],
+      messages: [],
     },
     allBooksPosted: [],
     errorLoginMessage: '',
     errorRegisterMessage: '',
   },
   getters: {
+    getMessages(state) {
+      return state.userInfo.messages;
+    },
     getNotifications(state) {
       return state.userInfo.notifications;
     },
@@ -52,9 +56,87 @@ export default new Vuex.Store({
     },
     setBookList (state, payload) {
       state.userInfo.booksPosted = payload.value;
-    }
+    },
+    setMessages(state, payload) {
+      state.userInfo.messages = payload.value;
+    },
   },
   actions: {
+    trade({ commit, state }, payload) {
+      return  firebase.database().ref('trades/' + payload.tradeId).set({
+                tradeId: payload.tradeId,
+                requester: payload.requester,
+                receiver: state.userInfo.loginUsername,
+                bookToTrade: payload.bookToTrade,
+                bookToOffer: payload.bookToOffer,
+      }).then(() => {
+          firebase.database().ref('books/' + payload.bookToTrade).update({
+            postedBy: payload.requester,
+          });
+          firebase.database().ref('books/' + payload.bookToOffer).update({
+            postedBy: state.userInfo.loginUsername,
+          });
+      });
+    },
+    removeMessage({ commit, state }, payload) {
+      return  firebase.database().ref('users/').once("value", (userObject) => {
+        if (userObject.val()) {
+          Object.values(userObject.val()).forEach((user) => {
+            if (user.username === state.userInfo.loginUsername) {
+              const newMessages = user.messages.filter(( mes ) => {
+                return mes.messageId !== payload.messageId;
+              });
+              firebase.database().ref('users/' + user.userId).update({
+                messages: newMessages,
+              });
+            }
+          });
+        }});
+    },
+    removeNotification({ commit, state }, payload) {
+      return  firebase.database().ref('users/').once("value", (userObject) => {
+        if (userObject.val()) {
+          Object.values(userObject.val()).forEach((user) => {
+            if (user.username === state.userInfo.loginUsername) {
+              const newNotif = user.notifications.filter(( not ) => {
+                return not.tradeId !== payload.notificationId;
+              });
+              firebase.database().ref('users/' + user.userId).update({
+                notifications: newNotif,
+              });
+            }
+          });
+        }});
+    },
+    sendTradeMessage({ commit }, payload) {
+      firebase.database().ref('users/').once("value", (userObject) => {
+        if (userObject.val()) {
+          Object.values(userObject.val()).forEach((user) => {
+            const newEntry = {
+              messageId: payload.messageId,
+              message: payload.message,
+              isPositive: payload.isPositive,
+            };
+            if (user.username === payload.sendTo) {
+              if (user.messages) user.messages.push(newEntry);
+              else user.messages = [newEntry];
+              firebase.database().ref('users/' + user.userId).update({
+                messages: user.messages,
+              });
+            }
+          });
+        }});
+    },
+    fetchTradeMessages({ commit }, username) {
+      return firebase.database().ref('users/').on("value", (userObject) => {
+        if (userObject.val()) {
+          Object.values(userObject.val()).forEach((user) => {
+            if (user.username === username) {
+              commit({ type: 'setMessages', value: user.messages });
+            }
+          });
+        }});
+    },
     fetchNotifications({ commit }, username) {
       return firebase.database().ref('users/').on("value", (userObject) => {
         if (userObject.val()) {
@@ -69,7 +151,9 @@ export default new Vuex.Store({
       firebase.database().ref('users/').once("value", (userObject) => {
         if (userObject.val()) {
           Object.values(userObject.val()).forEach((user) => {
-            const newEntry = { requester: payload.requester,
+            const newEntry = {
+                               tradeId: payload.tradeId,
+                               requester: payload.requester,
                                bookToTrade: payload.bookToTrade,
                                bookToOffer: payload.bookToOffer};
             if (user.username === payload.trader) {
@@ -115,6 +199,7 @@ export default new Vuex.Store({
       });
     },
     fetchAllBooks({commit}) {
+      console.log('in fetch all books');
       firebase.database().ref('books/').on("value", (bookObject) => {
         const allBookList = [];
         if (bookObject.val()) {

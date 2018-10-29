@@ -16,7 +16,19 @@
          v-if = "notifications && notifications.length > 2"
          @click.prevent = "goToNotificationsPage">show more
       </a><br>
-      <EditModal v-if="showEditOptions" @close="showEditOptions = false"></EditModal>
+      <div  style = "border: 3px solid black; margin: 5%; padding: 5%;"
+            :style = "{ color: item.isPositive ? 'green' : 'red' }"
+            v-if = "messages && messages.length"
+            v-for = "(item, index) in sortedMessages.slice(0, 2)">
+        <span style = "color: black"
+              id = 'closeMessage'
+              @click.prevent = "deleteMessage(item.messageId)">x
+        </span><br>
+        {{ item.message }}
+      </div>
+      <EditModal v-if="showEditOptions"
+                 @close="showEditOptions = false">
+      </EditModal>
     </div>
     <div slot = "footer" class = "text-center">
       <button type = "button" class = "btn btn-primary" @click.prevent = "editProfile">Edit Profile</button>
@@ -26,6 +38,7 @@
 </template>
 
 <script>
+  import { mapActions } from 'vuex';
   import Modal from './GenericModalStructure.vue';
   import EditModal from './EditProfileModal.vue';
   import TradeNotification from '../TradeNotification.vue';
@@ -33,13 +46,20 @@
   export default {
     name: 'OptionsModal',
     components: { Modal, EditModal, TradeNotification },
-    props: ['logout', 'username', 'notifications'],
+    props: ['logout', 'username', 'notifications', 'messages'],
     data() {
       return {
         showEditOptions: false,
       }
     },
     methods: {
+      ...mapActions([
+          'removeMessage',
+      ]),
+      deleteMessage(messageId) {
+        console.log(messageId);
+        this.removeMessage({ messageId: messageId});
+      },
       goToNotificationsPage() {
         // todo implement
       },
@@ -52,8 +72,20 @@
     },
     computed: {
       sortedNotifications() {
-        return this.notifications.reverse();
+        return this.notifications ? this.notifications.reverse() : [];
+      },
+      sortedMessages() {
+        return this.messages ? this.messages.reverse() : [];
       }
     }
   }
 </script>
+
+<style scoped>
+  #closeMessage {
+    float:right;
+    display:inline-block;
+    padding:2px 5px;
+    cursor:pointer;
+  }
+</style>

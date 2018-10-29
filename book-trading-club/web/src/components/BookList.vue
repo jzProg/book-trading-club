@@ -10,6 +10,7 @@
               :author = "book.author"
               :image = "book.image"
               :copies = "book.copies"
+              :owner = "book.postedBy"
               :postedBy = "null">
         </Book>
       </div>

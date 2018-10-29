@@ -9,14 +9,14 @@
            alt = "book cover">
       <div>{{ title }}</div>
       <div>{{ author }} </div>
-      <div v-if = "isUserLoggedIn()"
+      <div v-if = "isUserLoggedIn() && notAuthPage()"
            id = "tradeBtn"
            class = "btn btn-success"
            style = "border-radius:50%; height:20%; width:14%; padding:2%; margin-top:2%"
            @click.prevent = "trade">
         <i class = "fas fa-exchange-alt"></i>
       </div>
-      <div v-if = "isUserLoggedIn()"
+      <div v-if = "isUserLoggedIn() && notAuthPage()"
            id = "likeBtn"
            class = "btn btn-danger"
            style = "border-radius:50%; height:20%; width:14%; padding:2%; margin-top:2%"
@@ -33,11 +33,14 @@
 
 <script>
   import { mapActions, mapGetters } from 'vuex';
+  import uniqueIdGeneratorMixin from '@/common/helpers/uniqueIdsGenerator';
+  import urlAuthMixin from "@/common/helpers/urlAuth";
   import TradeModal from './modals/TradeModal.vue';
 
   export default {
     name: 'Book',
-    props: ['bookId', 'title', 'author', 'image', 'postedBy', 'copies'],
+    props: ['bookId', 'title', 'author', 'image', 'postedBy', 'copies', 'owner'],
+    mixins: [uniqueIdGeneratorMixin, urlAuthMixin],
     data() {
       return {
         showTradeModal: false,
@@ -51,11 +54,17 @@
       ]),
       onTradeClose(book) {
         this.showTradeModal = false;
-        this.sendNotification({ trader: this.postedBy,
-          requester: this.getLoginUsername,
-          bookToTrade: this.bookId,
-          bookToOffer: book.bookId
-        });
+        if (book && Object.keys(book).length) {
+          this.sendNotification({
+            tradeId: this.guid(),
+            trader: this.owner,
+            requester: this.getLoginUsername,
+            bookToTrade: this.bookId,
+            bookToOffer: book.bookId
+          });
+        } else {
+            console.log('no book selected for trade');
+        }
       },
       isUserLoggedIn() {
         return localStorage.getItem('token');

@@ -29,7 +29,7 @@
     },
     computed: {
       getFilteredBooks() {
-        return this.getAllBooksPosted.filter((book) => { return book.postedBy === this.getLoginUsername; })
+        return this.getAllBooksPosted.filter((book) => { return book.postedBy === this.getLoginUsername; });
       },
       ...mapGetters([
           'getAllBooksPosted',

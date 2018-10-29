@@ -22,10 +22,12 @@
 
 <script>
   import { mapGetters, mapActions } from 'vuex';
+  import uniqueIdGeneratorMixin from '@/common/helpers/uniqueIdsGenerator';
 
   export default {
     name: 'TradeNotification',
     props: ['notification'],
+    mixins: [uniqueIdGeneratorMixin],
     data() {
       return {
         hover: false,
@@ -38,12 +40,31 @@
     methods: {
       ...mapActions([
         'fetchAllBooks',
+        'sendTradeMessage',
+        'removeNotification',
+        'trade',
       ]),
       acceptTrade() {
-        console.log('accept!');
+        this.trade({ requester: this.notification.requester,
+                     bookToTrade:  this.notification.bookToTrade,
+                     bookToOffer: this.notification.bookToOffer,
+                     tradeId: this.guid(),
+        }).then(() => {
+          this.sendTradeMessage({ sendTo: this.notification.requester,
+                                  message: `Trade accepted by ${this.getLoginUsername}! You obtained ${this.getBookTitleById(this.notification.bookToTrade)}! :)`,
+                                  messageId: this.guid(),
+                                  isPositive: true,
+          });
+          this.removeNotification({ notificationId: this.notification.tradeId});
+        });
       },
       declineTrade() {
-        console.log('decline!');
+        this.sendTradeMessage({ sendTo: this.notification.requester,
+                                message: `Trade rejected by ${this.getLoginUsername} for book ${this.getBookTitleById(this.notification.bookToTrade)} :(`,
+                                messageId: this.guid(),
+                                isPositive: false,
+        });
+        this.removeNotification({ notificationId: this.notification.tradeId});
       },
       getBookTitleById(bookId) {
         const book = this.getAllBooksPosted.find(item => { return item.bookId === bookId; });
@@ -53,6 +74,7 @@
     computed: {
       ...mapGetters([
         'getAllBooksPosted',
+        'getLoginUsername',
       ]),
     }
   }
