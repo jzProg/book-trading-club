@@ -70,12 +70,14 @@ export default new Vuex.Store({
                 bookToTrade: payload.bookToTrade,
                 bookToOffer: payload.bookToOffer,
       }).then(() => {
+          // todo implement 'book copies' based solution
           firebase.database().ref('books/' + payload.bookToTrade).update({
             postedBy: payload.requester,
           });
           firebase.database().ref('books/' + payload.bookToOffer).update({
             postedBy: state.userInfo.loginUsername,
           });
+          // todo check if book already been traded (on another trade)
       });
     },
     removeMessage({ commit, state }, payload) {

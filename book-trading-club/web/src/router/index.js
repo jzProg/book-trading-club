@@ -5,6 +5,8 @@ import Register from '@/components/Register';
 import Home from '@/components/Home';
 import AllBooks from '@/components/AllBooks';
 import Profile from '@/components/Profile';
+import Messages from '@/components/Messages';
+import Notifications from '@/components/Notifications';
 
 Vue.use(Router);
 
@@ -42,6 +44,16 @@ export default new Router({
       path: '/profile',
       name: 'Profile',
       component: Profile
+    },
+    {
+      path: '/messages',
+      name: 'Messages',
+      component: Messages
+    },
+    {
+      path: '/notifications',
+      name: 'Notifications',
+      component: Notifications
     },
   ]
 })

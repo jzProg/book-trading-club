@@ -14,7 +14,7 @@
       </TradeNotification>
       <a style = "float: right"
          v-if = "notifications && notifications.length > 2"
-         @click.prevent = "goToNotificationsPage">show more
+         @click.prevent = "goToPage('notifications')">show more
       </a><br>
       <div  style = "border: 3px solid black; margin: 5%; padding: 5%;"
             :style = "{ color: item.isPositive ? 'green' : 'red' }"
@@ -26,6 +26,10 @@
         </span><br>
         {{ item.message }}
       </div>
+      <a style = "float: right"
+         v-if = "messages && messages.length > 2"
+         @click.prevent = "goToPage('messages')">show more
+      </a><br>
       <EditModal v-if="showEditOptions"
                  @close="showEditOptions = false">
       </EditModal>
@@ -60,8 +64,8 @@
         console.log(messageId);
         this.removeMessage({ messageId: messageId});
       },
-      goToNotificationsPage() {
-        // todo implement
+      goToPage(page) {
+        this.$router.push(`\${page}`);
       },
       editProfile() {
         this.showEditOptions = true;
