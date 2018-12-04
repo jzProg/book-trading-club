@@ -1,18 +1,23 @@
-package com.jzprog.booktradingclub.hello;
+package com.jzprog.booktradingclub.src.controllers;
 
 import java.util.concurrent.atomic.AtomicLong;
+
+import com.jzprog.booktradingclub.src.model.Greeting;
+import com.jzprog.booktradingclub.src.model.HelloMessage;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-//import org.springframework.stereotype.Controller;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
 public class GreetingController {
+
+    @Value("${test}")
+    String test;
 
     private static final String template = "Hello, %s!";
     private final AtomicLong counter = new AtomicLong();
@@ -20,10 +25,10 @@ public class GreetingController {
 
     @RequestMapping("/greeting")
     public Greeting greeting(@RequestParam(value="name", defaultValue="World") String name) {
-        return new Greeting(String.format(template, name));
+        return new Greeting(String.format(template, test));
     }
 
-    @MessageMapping("/hello")
+    @MessageMapping("/src")
     @SendTo("/topic/greetings")
     public Greeting greeting(HelloMessage message) throws Exception {
         Thread.sleep(1000); // simulated delay
