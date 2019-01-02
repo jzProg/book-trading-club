@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import uniqueIdGenerator from '../common/helpers/uniqueIdsGenerator';
 
 Vue.use(Vuex);
 
@@ -62,7 +63,7 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    trade({ commit, state }, payload) {
+    trade({ commit, dispatch, state }, payload) {
       return  firebase.database().ref('trades/' + payload.tradeId).set({
                 tradeId: payload.tradeId,
                 requester: payload.requester,
@@ -70,13 +71,35 @@ export default new Vuex.Store({
                 bookToTrade: payload.bookToTrade,
                 bookToOffer: payload.bookToOffer,
       }).then(() => {
-          // todo implement 'book copies' based solution
-          firebase.database().ref('books/' + payload.bookToTrade).update({
-            postedBy: payload.requester,
-          });
-          firebase.database().ref('books/' + payload.bookToOffer).update({
-            postedBy: state.userInfo.loginUsername,
-          });
+        firebase.database().ref('books/').once("value", (bookObject) => {
+          if (bookObject.val()) {
+            Object.values(bookObject.val()).forEach((book) => {
+              if (book.bookId === payload.bookToTrade || book.bookId === payload.bookToOffer) {
+                let theUploader = state.userInfo.loginUsername;
+                let theBookId = payload.bookToOffer;
+                if (book.bookId === payload.bookToTrade) {
+                  theUploader = payload.requester;
+                  theBookId = payload.bookToTrade;
+                }
+                if (book.copies && book.copies > 1) {
+                  firebase.database().ref('books/' + theBookId).update({
+                    copies: book.copies - 1,
+                  });
+                  dispatch('addNewBook', {
+                    bookId: uniqueIdGenerator.methods.guid(),
+                    title: book.title,
+                    author: book.author,
+                    image: book.image,
+                    postedBy: theUploader,
+                  });
+                } else {
+                  firebase.database().ref('books/' + theBookId).update({
+                    postedBy: theUploader,
+                  });
+                }
+              }
+            });
+          }});
           // todo check if book already been traded (on another trade)
       });
     },
