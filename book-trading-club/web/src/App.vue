@@ -1,6 +1,5 @@
 <template>
   <div id = "app">
-   <!-- <img src = "./assets/logo.png"> -->
     <i v-if = "(!isLoggedIn() || notAuthPage()) &&  !isExcludedPage()"
        class = "fas fa-book fa-10x"
        style = "color:green;margin-bottom: 2%">
@@ -14,13 +13,6 @@
                  alt = "profile image"
                  style = "width:80px; height:80px; border-radius:50px; float:right; margin-right:5%">
           </a>
-          <OptionsModal v-if = "showOptionsModal"
-                        :username = "username"
-                        :logout = "logout"
-                        :notifications = "getNotifications"
-                        :messages = "getMessages"
-                        @close = "onOptionsClose">
-          </OptionsModal>
         </div>
       </div>
       <div class = "row">
@@ -38,13 +30,11 @@
   import bus from "@/common/eventBus";
   import firebaseConfigProperties from "@/common/firebaseConfigProperties";
   import urlAuthMixin from "@/common/helpers/urlAuth";
-  import OptionsModal from '@/components/modals/OptionsModal';
   import { mapActions, mapGetters, mapMutations } from 'vuex';
 
   export default {
     name: 'app',
     mixins: [firebaseConfigProperties, urlAuthMixin],
-    components: { OptionsModal },
     data() {
       return {
         username: '',

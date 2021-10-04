@@ -27,7 +27,6 @@
     <div id = "uploadedSection" v-if = "postedBy">uploaded by
       <a style = "color:deepskyblue" @click.prevent = "goToProfile">{{ postedBy }}</a>
     </div>
-    <TradeModal v-if = "showTradeModal" @close="onTradeClose"></TradeModal>
   </div>
 </template>
 
@@ -35,7 +34,6 @@
   import { mapActions, mapGetters } from 'vuex';
   import uniqueIdGeneratorMixin from '@/common/helpers/uniqueIdsGenerator';
   import urlAuthMixin from "@/common/helpers/urlAuth";
-  import TradeModal from './modals/TradeModal.vue';
 
   export default {
     name: 'Book',
@@ -46,7 +44,6 @@
         showTradeModal: false,
       }
     },
-    components: { TradeModal },
     methods: {
       ...mapActions([
           'deleteBook',
