@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
   <groupId>com.jzprog</groupId>
-  <artifactId>book-trading-club</artifactId>
+  <artifactId>book-track</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
@@ -20,9 +20,8 @@
 
 
 	<modules>
-        <module>web</module>
-        <module>server</module>
-    </modules>
+    <module>web</module>
+  </modules>
 
 
 

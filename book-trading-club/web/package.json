@@ -1,7 +1,7 @@
 {
-  "name": "book-trading-club",
+  "name": "book-track",
   "version": "1.0.0",
-  "description": "A Vue.js project",
+  "description": "A Book Read Tracking App",
   "author": "jzProg <john_z94@hotmail.com>",
   "private": true,
   "scripts": {

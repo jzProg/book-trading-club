@@ -1,21 +1,21 @@
-# book-trading-club
+# Book Track
 
-> A Vue.js project
+N/A
 
-## Build Setup
+## Technologies and Tools
+<img src="https://img.shields.io/badge/vuejs%20-%2335495e.svg?&style=for-the-badge&logo=vue.js&logoColor=%234FC08D"/><img src="https://img.shields.io/badge/webpack%20-%238DD6F9.svg?&style=for-the-badge&logo=webpack&logoColor=black"/><img src="https://img.shields.io/badge/firebase%20-%23039BE5.svg?&style=for-the-badge&logo=firebase"/>
 
-``` bash
-# install dependencies
-npm install
+- **Webpack** (v3.6.0) / **Vue** (v2.5.2) for frontend.
+- **Firebase**, for user authentication and data persistence.
 
-# serve with hot reload at localhost:8080
-npm run dev
+## App Features
 
-# build for production with minification
-npm run build
+N/A
 
-# build for production and view the bundle analyzer report
-npm run build --report
-```
+## Setup Instructions
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+- In the `/web/src/common/firebaseConfigProperties.js` file, include valid firebase config keys.
+- cd to `/web` folder.
+- Run `npm install`.
+- Build with `npm run build` command.
+- For *dev server*, run `npm run dev`. Access app on localhost:8080.
