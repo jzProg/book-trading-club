@@ -33,12 +33,8 @@
     created() {
       if (!this.getLoginUsername) {
         bus.$on('login', (username) => {
-          this.storeUsername(username).then(() => {
-            this.fetchBooks(this.getLoginUsername);
-          });
+          this.storeUsername(username);
         });
-      } else {
-        this.fetchBooks(this.getLoginUsername);
       }
     },
     methods: {

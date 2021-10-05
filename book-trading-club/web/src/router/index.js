@@ -13,6 +13,7 @@ export default new Router({
       path: '/',
       name: 'Welcome',
       component: Welcome,
+      meta: { hasProfileHeader: false },
       beforeEnter: (to, from, next) => {
         if (localStorage.getItem('token')) next('/home');
         else next();
@@ -21,12 +22,14 @@ export default new Router({
     {
       path: '/register',
       name: 'Register',
+      meta: { hasProfileHeader: false },
       component: Register
     },
     {
       path: '/home',
       name: 'Home',
       component: Home,
+      meta: { hasProfileHeader: true },
       beforeEnter: (to, from, next) => {
         if (localStorage.getItem('token')) next();
         else next('/');
@@ -36,6 +39,7 @@ export default new Router({
     {
       path: '/profile',
       name: 'Profile',
+      meta: { hasProfileHeader: true },
       component: Profile
     }
   ]
