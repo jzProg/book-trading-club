@@ -13,7 +13,7 @@
   import Modal from './GenericModalStructure.vue';
 
   export default {
-      name: 'EditProfileModal',
+      name: 'ProfileModal',
       emits: ['logout', 'close'],
       props: {
         username: String
