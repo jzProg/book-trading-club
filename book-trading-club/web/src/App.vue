@@ -38,7 +38,7 @@
   import 'firebase/auth';
   import { VBToggle } from 'bootstrap-vue';
   import 'bootstrap-vue/dist/bootstrap-vue.css';
-  import ProfileModal from '@/components/modals/EditProfileModal';
+  import ProfileModal from '@/components/modals/ProfileModal';
   import Loading from '@/components/modals/Loading';
 
   export default {
