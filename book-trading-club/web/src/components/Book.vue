@@ -1,7 +1,6 @@
 <template>
   <div id = "bookContainer">
     <div id = 'bookContent'>
-      <div v-show = 'copies >= 2' id = 'copiesSpan'>x{{ copies || 1 }}</div>
       <span v-if = 'isLoggedInPage()' id = 'close' @click.prevent = "deleteAction">x</span><br>
       <img :class = "'book' + bookId"
            id = "bookImg"
@@ -9,23 +8,13 @@
            alt = "book cover">
       <div>{{ title }}</div>
       <div>{{ author }} </div>
-      <div v-if = "isUserLoggedIn() && notAuthPage()"
-           id = "tradeBtn"
-           class = "btn btn-success"
-           style = "border-radius:50%; height:20%; width:14%; padding:2%; margin-top:2%"
-           @click.prevent = "trade">
-        <i class = "fas fa-exchange-alt"></i>
-      </div>
-      <div v-if = "isUserLoggedIn() && notAuthPage()"
+      <div v-if = "isUserLoggedIn()"
            id = "likeBtn"
            class = "btn btn-danger"
            style = "border-radius:50%; height:20%; width:14%; padding:2%; margin-top:2%"
            @click.prevent = "like">
         <i class = "fas fa-heart"></i>
       </div>
-    </div>
-    <div id = "uploadedSection" v-if = "postedBy">uploaded by
-      <a style = "color:deepskyblue" @click.prevent = "goToProfile">{{ postedBy }}</a>
     </div>
   </div>
 </template>
@@ -37,40 +26,17 @@
 
   export default {
     name: 'Book',
-    props: ['bookId', 'title', 'author', 'image', 'postedBy', 'copies', 'owner'],
+    props: ['bookId', 'title', 'author', 'image'],
     mixins: [uniqueIdGeneratorMixin, urlAuthMixin],
-    data() {
-      return {
-        showTradeModal: false,
-      }
-    },
     methods: {
       ...mapActions([
-          'deleteBook',
-          'sendNotification',
+          'deleteBook'
       ]),
-      onTradeClose(book) {
-        this.showTradeModal = false;
-        if (book && Object.keys(book).length) {
-          this.sendNotification({
-            tradeId: this.guid(),
-            trader: this.owner,
-            requester: this.getLoginUsername,
-            bookToTrade: this.bookId,
-            bookToOffer: book.bookId
-          });
-        } else {
-            console.log('no book selected for trade');
-        }
-      },
       isUserLoggedIn() {
         return localStorage.getItem('token');
       },
       like() {
         // todo implement
-      },
-      trade() {
-        this.showTradeModal = true;
       },
       getImage() {
          return this.image || require('../assets/GenericBookCover.jpg');

@@ -8,10 +8,11 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     userInfo: {
-      booksPosted: [],
+      books: [],
+      userId: null,
       loginUsername: '',
     },
-    allBooksPosted: [],
+    searchResults: [],
     errorLoginMessage: '',
     errorRegisterMessage: '',
     load: false,
@@ -27,10 +28,10 @@ export default new Vuex.Store({
       return state.errorLoginMessage;
     },
     getUserBooks(state) {
-      return state.userInfo.booksPosted;
+      return state.userInfo.books;
     },
-    getAllBooksPosted(state) {
-      return state.allBooksPosted;
+    getSearchResults(state) {
+      return state.searchResults;
     },
     getLoginUsername(state) {
       return state.userInfo.loginUsername;
@@ -49,62 +50,40 @@ export default new Vuex.Store({
     setLoginUsername(state, payload) {
       state.userInfo.loginUsername = payload.value;
     },
-    setAllBookList(state, payload) {
-      state.allBooksPosted = payload.value;
+    setSearchResults(state, payload) {
+      state.searchResults = payload.value;
+    },
+    setUserId(state, payload) {
+      state.userInfo.userId = payload.value;
     },
     setBookList (state, payload) {
-      state.userInfo.booksPosted = payload.value;
+      state.userInfo.books = payload.value;
     }
   },
   actions: {
     addNewBook({ commit, state }, payload) {
-      const results = state.userInfo.booksPosted.find(book => {
-          return book.title === payload.title && book.postedBy === payload.postedBy;
+      const {  books, userId } = state.userInfo;
+      const results = books.find(book => {
+          return book.title === payload.title;
       });
       if (results) {
-        return firebase.database().ref('books/' + results.bookId)
-          .update({ copies: ( results.copies? results.copies + 1 : 2 ) });
+        return;
       }
-      return firebase.database().ref('books/' + payload.bookId).set({
+      const newBook = {
         bookId: payload.bookId,
         title: payload.title,
         author: payload.author,
         image: payload.image,
-        copies: 1,
-        postedBy: payload.postedBy,
+      }
+      return firebase.database().ref('users/' + userId).update({
+        books: [ ...books, newBook ]
       });
     },
-    fetchBooks({commit}, username) {
-       firebase.database().ref('books/').on("value", (bookObject) => {
-        const filteredBooks = [];
-        if (bookObject.val()) {
-          Object.values(bookObject.val()).forEach((book) => {
-            if (book.postedBy === username) {
-              filteredBooks.push(book);
-            }
-          });
-         commit({ type: 'setBookList', value: filteredBooks});
-        }
-      }, (errorObject) => {
-        console.log("Can't fetch books! The read failed: " + errorObject.code);
+    deleteBook({ commit, state }, payload) {
+      const { books, userId } = state.userInfo;
+      return firebase.database().ref('users/' + userId).update({
+        books: books.filter(book => book.bookId !== payload.bookId)
       });
-    },
-    fetchAllBooks({commit}) {
-      console.log('in fetch all books');
-      firebase.database().ref('books/').on("value", (bookObject) => {
-        const allBookList = [];
-        if (bookObject.val()) {
-          Object.values(bookObject.val()).forEach((book) => {
-            allBookList.push(book);
-          });
-          commit({ type: 'setAllBookList', value: allBookList});
-        }
-      }, (errorObject) => {
-        console.log("Can't fetch books! The read failed: " + errorObject.code);
-      });
-    },
-    deleteBook({ commit }, payload) {
-      return  firebase.database().ref('books/' + payload.bookId).remove();
     },
     userLogin({ commit }, payload) {
       return firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)

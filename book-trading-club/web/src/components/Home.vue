@@ -7,9 +7,6 @@
       <i class = "fas fa-plus"></i>
     </div>
     <Books :bookList = "getUserBooks"></Books>
-    <Modal v-if = "showModal"
-           @close = "onClose">
-    </Modal>
   </div>
 </template>
 
@@ -17,12 +14,11 @@
   import Books from './BookList.vue';
   import uniqueIdGeneratorMixin from '@/common/helpers/uniqueIdsGenerator';
   import bus from "@/common/eventBus";
-  import Modal from './modals/AddBookModal.vue';
   import { mapActions, mapGetters } from 'vuex';
 
   export default {
     name: 'Home',
-    components: { Books, Modal },
+    components: { Books },
     mixins: [uniqueIdGeneratorMixin],
     data() {
       return {
@@ -44,21 +40,8 @@
           'deleteBook',
           'storeUsername',
       ]),
-      onClose(res) {
-        if (res && Object.keys(res).length) {
-          const bookId = this.guid();
-          this.addNewBook({ bookId: bookId,
-                            title: res.title,
-                            author: res.author_name[0],
-                            image: `http://covers.openlibrary.org/b/isbn/${res.isbn[0]}-L.jpg`,
-                            postedBy: this.getLoginUsername}).then(() => {
-            this.fetchBooks(this.getLoginUsername);
-          });
-        }
-        this.showModal = false;
-      },
       postBook() {
-        this.showModal = true;
+        this.$router.push('/search');
       },
       deleteBook(bookId) {
         this.deleteBook({ bookId: bookId}).then(() => {

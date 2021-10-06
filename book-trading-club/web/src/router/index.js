@@ -4,6 +4,7 @@ import Welcome from '@/components/Welcome';
 import Register from '@/components/Register';
 import Home from '@/components/Home';
 import Profile from '@/components/Profile';
+import Search from '@/components/Search';
 
 Vue.use(Router);
 
@@ -35,7 +36,12 @@ export default new Router({
         else next('/');
       }
     },
-
+    {
+      path: '/search',
+      name: 'search',
+      meta: { hasProfileHeader: true },
+      component: Search
+    },
     {
       path: '/profile',
       name: 'Profile',

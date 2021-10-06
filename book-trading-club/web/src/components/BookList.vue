@@ -8,10 +8,7 @@
               :bookId = "book.bookId"
               :title = "book.title"
               :author = "book.author"
-              :image = "book.image"
-              :copies = "book.copies"
-              :owner = "book.postedBy"
-              :postedBy = "null">
+              :image = "book.image">
         </Book>
       </div>
     </div>

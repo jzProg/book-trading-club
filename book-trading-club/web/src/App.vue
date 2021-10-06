@@ -61,6 +61,7 @@
       ...mapMutations([
         'setLoginUsername',
         'setBookList',
+        'setUserId',
       ]),
       ...mapActions([
         'userLogout',
@@ -89,6 +90,7 @@
                 this.setBookList({ value: user.books || [] });
                 this.username = user.username;
                 this.setLoginUsername({ value: user.username });
+                this.setUserId({ value: user.userId });
                 bus.$emit('login', user.username);
               }
             });
@@ -109,12 +111,12 @@
         firebase.initializeApp(this.config);
       }
       const vm = this;
-      firebase.auth().onAuthStateChanged((user) => {
+      firebase.auth().onAuthStateChanged(user => {
         if (user) {
           console.log('loggedIn!');
           // User is signed in.
           user = firebase.auth().currentUser;
-          user.getIdToken().then((token) => {
+          user.getIdToken().then(token => {
             localStorage.setItem('token', token);
             vm.fetchInitialUserInfo(user.email);
           });

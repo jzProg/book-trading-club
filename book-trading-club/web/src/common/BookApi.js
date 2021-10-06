@@ -8,8 +8,8 @@ const bookApi = {
     }
   },
   methods: {
-    getBookImage (isbn) {
-      return `${this.imagesEndpoint}${isbn}-S.jpg`;
+    getBookImage (isbn, size = 'S') {
+      return `${this.imagesEndpoint}${isbn}-${size}.jpg`;
     },
     searchBookByTitle (title) {
       return axios.get(`${this.searchApiEndpoint}?title=${title}`);
