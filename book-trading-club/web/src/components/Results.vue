@@ -1,44 +1,31 @@
 <template>
-  <div>
-    <div v-for="(book, index) in getSearchResults"
-         @click.prevent="chooseBook(book)"
-         class="book"
-         style="margin-top:5%;border-style: solid;padding: 2%;cursor: pointer;">
-       <img width="50px"
-            height="60px"
-            :src="getBookImage(book.isbn[0])"
-            @load="getAlternativeImage($event)"><br>
-       <label>{{ book.title }}</label><br>
-       <label v-if="book.author_name">{{ book.author_name[0] }}</label>
-     </div>
-   </div>
+  <book-list
+    :book-list="getSearchResults.map(book => { return {
+      bookId: book.isbn[0],
+      title: book.title,
+      author: book.author_name &&  book.author_name.length ? book.author_name[0] : 'Unknown author',
+      image: getBookImage(book.isbn[0])
+      }})"
+      @selectBook="chooseBook"/>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import bookApi from '@/common/BookApi';
+import BookList from '@/components/BookList';
 
 export default {
   name: 'results',
   mixins: [bookApi],
   emits: ['select'],
-  data () {
-    return {
-
-    }
+  components: {
+    BookList
   },
   methods: {
-    chooseBook (book) {
-      this.$emit('select', book);
+    chooseBook (isbn) {
+      console.log(isbn)
+      this.$emit('select', this.getSearchResults.find(book => book.isbn[0] === isbn));
     },
-    getClass(index) {
-      return this.selectedIndex === index ? 'selected' : ''
-    },
-    getAlternativeImage (event) {
-      if (event.target.naturalWidth === 1 || event.target.naturalHeight === 1) {
-          event.target.src = require('@/assets/GenericBookCover.jpg');
-      }
-    }
   },
   computed: {
     ...mapGetters([
@@ -47,9 +34,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-  .book:hover {
-    border-color: green;
-  }
-</style>

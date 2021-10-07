@@ -10,6 +10,8 @@
                 <img :src="getImage()"
                      alt="profile image"
                      class="profileItem"
+                     width="75px"
+                     height="75px"
                      id="profileImg">
               </a>
           </div>

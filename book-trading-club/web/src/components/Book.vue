@@ -1,19 +1,20 @@
 <template>
-  <div id = "bookContainer">
-    <div id = 'bookContent'>
-      <span v-if = 'isLoggedInPage()' id = 'close' @click.prevent = "deleteAction">x</span><br>
-      <img :class = "'book' + bookId"
-           id = "bookImg"
-           :src = 'getImage()'
-           alt = "book cover">
-      <div>{{ title }}</div>
-      <div>{{ author }} </div>
-      <div v-if = "isUserLoggedIn()"
-           id = "likeBtn"
-           class = "btn btn-danger"
-           style = "border-radius:50%; height:20%; width:14%; padding:2%; margin-top:2%"
-           @click.prevent = "like">
-        <i class = "fas fa-heart"></i>
+  <div id="bookContainer" @click.prevent="$emit('selectBook', bookId)">
+    <div id='bookContent'>
+      <span v-if='isLoggedInPage()' id='close' @click.prevent="deleteAction">x</span><br>
+      <img :class="'book' + bookId"
+           id="bookImg"
+           :src='getImage()'
+           @load="getAlternativeImage($event)"
+           alt="book cover">
+      <div><b>{{ title }}</b></div>
+      <div><i>{{ author }}</i></div>
+      <div v-if="isUserLoggedIn()"
+           id="likeBtn"
+           class="btn btn-danger"
+           style="border-radius:50%; height:20%; width:14%; padding:2%; margin-top:2%"
+           @click.prevent="like">
+        <i class="fas fa-heart"></i>
       </div>
     </div>
   </div>
@@ -39,7 +40,12 @@
         // todo implement
       },
       getImage() {
-         return this.image || require('../assets/GenericBookCover.jpg');
+         return this.image || require('@/assets/GenericBookCover.jpg');
+      },
+      getAlternativeImage (event) {
+        if (event.target.naturalWidth === 1 || event.target.naturalHeight === 1) {
+            event.target.src = require('@/assets/GenericBookCover.jpg');
+        }
       },
       deleteAction() {
         this.deleteBook({ bookId: this.bookId });
@@ -68,13 +74,6 @@
     margin-left: 10%;
     margin-right: 10%;
   }
-  #copiesSpan {
-    background-color: orange;
-    color: white;
-    width: 10%;
-    float: left;
-    border-radius: 40%;
-  }
   #close {
     float:right;
     display:inline-block;
@@ -87,8 +86,8 @@
   #uploadedSection {
     margin: 2%;
   }
-  a:hover{
-    text-decoration:none;
+  #bookContent:hover{
+    border-color: gray;
     cursor:pointer;
   }
   #bookImg {
