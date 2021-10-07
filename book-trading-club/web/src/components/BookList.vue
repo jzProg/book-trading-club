@@ -9,6 +9,7 @@
               :title="book.title"
               :author="book.author"
               :image="book.image"
+              :publish-year="book.first_publish_year"
               @selectBook="(event) => $emit('selectBook', event)">
         </Book>
       </div>

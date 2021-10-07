@@ -74,6 +74,7 @@ export default new Vuex.Store({
         title: payload.title,
         author: payload.author,
         image: payload.image,
+        first_publish_year: payload.first_publish_year
       }
       return firebase.database().ref('users/' + userId).update({
         books: [ ...books, newBook ]

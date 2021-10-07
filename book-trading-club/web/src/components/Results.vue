@@ -4,7 +4,8 @@
       bookId: book.isbn[0],
       title: book.title,
       author: book.author_name &&  book.author_name.length ? book.author_name[0] : 'Unknown author',
-      image: getBookImage(book.isbn[0])
+      image: getBookImage(book.isbn[0]),
+      first_publish_year: book.first_publish_year
       }})"
       @selectBook="chooseBook"/>
 </template>

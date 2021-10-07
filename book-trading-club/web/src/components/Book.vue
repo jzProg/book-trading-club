@@ -9,6 +9,7 @@
            alt="book cover">
       <div><b>{{ title }}</b></div>
       <div><i>{{ author }}</i></div>
+      <div style="color: green">{{ publishYear }}</div>
       <div v-if="isUserLoggedIn()"
            id="likeBtn"
            class="btn btn-danger"
@@ -27,7 +28,7 @@
 
   export default {
     name: 'Book',
-    props: ['bookId', 'title', 'author', 'image'],
+    props: ['bookId', 'title', 'author', 'image', 'publishYear'],
     mixins: [uniqueIdGeneratorMixin, urlAuthMixin],
     methods: {
       ...mapActions([
