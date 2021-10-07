@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div id = "addBookBtn"
-         class = "btn btn-primary"
-         style = "border-radius:40px"
-         @click.prevent = "postBook">
-      <i class = "fas fa-plus"></i>
+    <div id="addBookBtn"
+         class="btn btn-primary"
+         style="border-radius:40px"
+         @click.prevent="postBook">
+      <i class="fas fa-plus"></i>
     </div>
-    <Books :bookList = "getUserBooks"></Books>
+    <Books :bookList="getUserBooks"></Books>
   </div>
 </template>
 

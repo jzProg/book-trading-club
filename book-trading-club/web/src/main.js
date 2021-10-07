@@ -21,6 +21,22 @@ Vue.component('b-collapse', BCollapse);
 
 Vue.use(VueAxios, axios);
 
+axios.interceptors.request.use(function(config) {
+    store.commit({ type: 'setLoad', value: true });
+    return config;
+}, function(err) {
+    return Promise.reject(err);
+});
+
+
+axios.interceptors.response.use(function(config) {
+    store.commit({ type: 'setLoad', value: false });
+    return config;
+}, function(err) {
+    return Promise.reject(err);
+});
+
+
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
