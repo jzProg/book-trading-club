@@ -1,7 +1,7 @@
 <template>
   <div>
     <h3>Search Books</h3>
-    <input type="text" placeholder="Title" v-model="enteredTitle">
+    <input type="text" placeholder="search term" v-model="enteredTerm">
     <button type="button"
             class="btn btn-primary"
             style="margin-top: 5%; margin-bottom:5%;"
@@ -16,17 +16,17 @@
 import { mapMutations, mapActions } from 'vuex';
 import Results from '@/components/Results';
 import bookApi from '@/common/BookApi';
-import uniqueIdGeneratorMixin from '@/common/helpers/uniqueIdsGenerator';
 
 export default {
   name: 'search',
   components: {
     Results
   },
-  mixins: [bookApi, uniqueIdGeneratorMixin],
+  mixins: [bookApi],
   data() {
     return {
-      enteredTitle: ''
+      enteredTerm: '',
+      page: 1
     }
   },
   methods: {
@@ -37,12 +37,12 @@ export default {
       'addNewBook'
     ]),
     searchForBook () {
-      this.searchBookByTitle(this.enteredTitle).then(response => {
+      this.searchBookByTerm(this.enteredTerm).then(response => {
         this.setSearchResults({ value: response.data.docs.filter(doc => doc.isbn && doc.isbn.length) });
       })
     },
     onBookSelected (book) {
-      const bookId = this.guid();
+      const bookId = book.isbn[0]
       const author = book.author_name[0];
       const image = this.getBookImage(book.isbn[0], 'L');
       this.addNewBook({ ...book, bookId, author, image });

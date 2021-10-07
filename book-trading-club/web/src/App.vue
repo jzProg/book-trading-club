@@ -39,7 +39,7 @@
   import { VBToggle } from 'bootstrap-vue';
   import 'bootstrap-vue/dist/bootstrap-vue.css';
   import ProfileModal from '@/components/modals/ProfileModal';
-  import Loading from '@/components/modals/Loading';
+  import Loading from '@/components/shared/Loading';
 
   export default {
     name: 'app',

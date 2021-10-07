@@ -1,7 +1,7 @@
 <template>
   <div id="loading-container">
-    <i class = "fas fa-book fa-10x rotate mask spin_img"
-       style = "color:green">
+    <i class="fas fa-book fa-10x rotate mask spin_img"
+       style="color:green">
     </i>
   </div>
 </template>

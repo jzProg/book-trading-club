@@ -62,9 +62,9 @@ export default new Vuex.Store({
   },
   actions: {
     addNewBook({ commit, state }, payload) {
-      const {  books, userId } = state.userInfo;
+      const { books, userId } = state.userInfo;
       const results = books.find(book => {
-          return book.title === payload.title;
+          return book.bookId === payload.bookId;
       });
       if (results) {
         return;
