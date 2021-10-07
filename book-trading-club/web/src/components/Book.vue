@@ -67,11 +67,14 @@
 </script>
 
 <style>
+  #bookContainer {
+    max-height: 356px;
+  }
   #bookContent{
     border-style: solid;
     min-height: 320px;
     padding: 5%;
-    margin-top: 10%;
+    margin-bottom: 10%;
     margin-left: 10%;
     margin-right: 10%;
   }

@@ -156,6 +156,7 @@
     align-items: flex-start;
     background-color: black;
     align-content: space-between;
+    margin-bottom: 2%;
   }
 
   .profileItem {

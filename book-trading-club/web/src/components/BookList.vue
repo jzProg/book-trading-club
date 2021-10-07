@@ -1,18 +1,16 @@
 <template>
-  <div>
-    <div id='bookListContent' class="container">
-      <div class="row">
-        <Book v-for='(book,index) in sortedBookList'
-              class="col-md-4"
-              :key="index"
-              :bookId="book.bookId"
-              :title="book.title"
-              :author="book.author"
-              :image="book.image"
-              :publish-year="book.first_publish_year"
-              @selectBook="(event) => $emit('selectBook', event)">
-        </Book>
-      </div>
+  <div id='bookListContent' class="container">
+    <div class="row">
+      <Book v-for='(book,index) in sortedBookList'
+            class="col-md-4"
+            :key="index"
+            :bookId="book.bookId"
+            :title="book.title"
+            :author="book.author"
+            :image="book.image"
+            :publish-year="book.first_publish_year"
+            @selectBook="(event) => $emit('selectBook', event)">
+      </Book>
     </div>
   </div>
 </template>
