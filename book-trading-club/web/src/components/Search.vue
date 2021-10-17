@@ -1,12 +1,12 @@
 <template>
   <div>
-    <h3>Search Books</h3>
     <input type="text"
            placeholder="search term"
+           @keyup.enter="searchForBook"
            v-model="enteredTerm">
     <button type="button"
             class="btn btn-primary"
-            style="margin-top: 5%; margin-bottom:5%;"
+            style="margin-top: 2%; margin-bottom: 2%"
             @click.prevent="searchForBook">
       Search
     </button>

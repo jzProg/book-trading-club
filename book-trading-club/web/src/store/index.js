@@ -16,8 +16,12 @@ export default new Vuex.Store({
     errorLoginMessage: '',
     errorRegisterMessage: '',
     load: false,
+    selectedCategory: 'Reading'
   },
   getters: {
+    getSelectedCategory(state) {
+      return state.selectedCategory;
+    },
     getLoad(state) {
       return state.load;
     },
@@ -38,6 +42,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    setSelectedCategory(state, payload) {
+      state.selectedCategory = payload.value;
+    },
     setLoad(state, payload) {
       state.load = payload.value;
     },
@@ -74,7 +81,8 @@ export default new Vuex.Store({
         title: payload.title,
         author: payload.author,
         image: payload.image,
-        first_publish_year: payload.first_publish_year
+        first_publish_year: payload.first_publish_year,
+        category: 'Plan to Read'
       }
       return firebase.database().ref('users/' + userId).update({
         books: [ ...books, newBook ]

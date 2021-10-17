@@ -6,7 +6,7 @@
          @click.prevent="postBook">
       <i class="fas fa-plus"></i>
     </div>
-    <Books :bookList="getUserBooks"></Books>
+    <Books :bookList="getBooksByCategory"></Books>
   </div>
 </template>
 
@@ -44,7 +44,7 @@
         this.$router.push('/search');
       },
       deleteBook(bookId) {
-        this.deleteBook({ bookId: bookId}).then(() => {
+        this.deleteBook({ bookId }).then(() => {
           this.fetchBooks(this.getLoginUsername);
         });
       },
@@ -53,7 +53,11 @@
       ...mapGetters([
           'getUserBooks',
           'getLoginUsername',
+          'getSelectedCategory'
       ]),
+      getBooksByCategory () {
+        return this.getUserBooks.filter(book => !book.category || book.category === this.getSelectedCategory)
+      }
     }
   }
 </script>

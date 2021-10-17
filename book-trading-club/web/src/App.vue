@@ -1,27 +1,36 @@
 <template>
   <div id="app">
     <div class="NavHeader">
-        <h3 id="logoDiv" @click.prevent="goToHome">
-            <b>Book Track</b>
-        </h3>
-        <div id="profileDiv" v-if="username">
-          <div v-if="$route.meta.hasProfileHeader">
-              <a @click.prevent="showOptions">
-                <img :src="getImage()"
-                     alt="profile image"
-                     class="profileItem"
-                     width="75px"
-                     height="75px"
-                     id="profileImg">
-              </a>
-          </div>
-          <h4 style="margin-left: 2%; color: white"><b>{{ username }}</b></h4>
+      <h3 id="logoDiv" @click.prevent="goToHome">
+          <b><span style="color: rgb(46, 109, 164)">B</span>ook <span style="color: rgb(46, 109, 164)">T</span>rack</b>
+      </h3>
+      <div class="container" v-if="username && !notAuthPage()">
+       <div class="row">
+         <div :class="['col-md-4 categoryItem', { selected: category.name === getSelectedCategory }]"
+              @click.prevent="setSelectedCategory({ value: category.name })"
+              v-for="(category, index) in categories">
+           <h3><i :class="category.icon"></i> <b>{{ category.name }}</b></h3><br>
+         </div>
+       </div>
+      </div>
+      <div id="profileDiv" v-if="username">
+        <div v-if="$route.meta.hasProfileHeader">
+            <a @click.prevent="showOptions">
+              <img :src="getImage()"
+                   alt="profile image"
+                   class="profileItem"
+                   width="75px"
+                   height="75px"
+                   id="profileImg">
+            </a>
         </div>
-        <profile-modal v-if="showOptionsModal"
-                     class="fragment"
-                     :username="username"
-                     @logout="logout"
-                     @close="onOptionsClose"/>
+        <h4 style="margin-left: 2%; color: white"><b>{{ username }}</b></h4>
+      </div>
+      <profile-modal v-if="showOptionsModal"
+                   class="fragment"
+                   :username="username"
+                   @logout="logout"
+                   @close="onOptionsClose"/>
     </div>
     <div class="fragment">
       <router-view/>
@@ -32,10 +41,11 @@
 
 <script>
   import Vue from 'vue';
-  import bus from "@/common/eventBus";
-  import firebaseConfigProperties from "@/common/firebaseConfigProperties";
+  import bus from '@/common/eventBus';
+  import firebaseConfigProperties from '@/common/firebaseConfigProperties';
+  import urlAuthMixin from '@/common/helpers/urlAuth';
   import { mapActions, mapGetters, mapMutations } from 'vuex';
-  import firebase from "firebase/app";
+  import firebase from 'firebase/app';
   import 'firebase/database';
   import 'firebase/auth';
   import { VBToggle } from 'bootstrap-vue';
@@ -48,7 +58,7 @@
     directives: {
       'b-toggle': VBToggle
     },
-    mixins: [firebaseConfigProperties],
+    mixins: [firebaseConfigProperties, urlAuthMixin],
     components: {
       ProfileModal,
       Loading
@@ -57,6 +67,11 @@
       return {
         username: '',
         showOptionsModal: false,
+        categories: [
+          { name: 'Reading', icon: 'fas fa-book-open'},
+          { name: 'Completed', icon: 'fas fa-check-square'},
+          { name: 'Plan to Read',  icon: 'fas fa-stream'}
+        ]
       };
     },
     methods: {
@@ -64,6 +79,7 @@
         'setLoginUsername',
         'setBookList',
         'setUserId',
+        'setSelectedCategory'
       ]),
       ...mapActions([
         'userLogout',
@@ -132,6 +148,7 @@
     computed: {
       ...mapGetters([
         'getLoad',
+        'getSelectedCategory'
       ]),
     }
 }
@@ -168,7 +185,21 @@
    color: white;
    cursor: pointer;
    margin-left: 2%;
-   flex: 3;
+   flex: 1;
+  }
+
+  .categoryItem {
+   color: gray;
+   cursor: pointer;
+   flex: 1;
+  }
+
+  .categoryItem:hover {
+     color: white;
+  }
+
+  .selected {
+     color: white;
   }
 
   #profileDiv {
