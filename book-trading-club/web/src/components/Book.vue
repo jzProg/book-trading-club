@@ -2,21 +2,19 @@
   <div id="bookContainer" @click.prevent="$emit('selectBook', bookId)">
     <div id='bookContent'>
       <span v-if='isLoggedInPage()' id='close' @click.prevent="deleteAction">x</span><br>
-      <img :class="'book' + bookId"
-           id="bookImg"
-           :src='getImage()'
-           @load="getAlternativeImage($event)"
-           alt="book cover">
+      <book-image :image="image"/>
       <div><b>{{ title }}</b></div>
       <div><i>{{ author }}</i></div>
       <div style="color: green">{{ publishYear }}</div>
       <div v-if="isUserLoggedIn()"
            id="likeBtn"
+           disabled
            class="btn btn-danger"
            style="border-radius:50%; height:20%; width:14%; padding:2%; margin-top:2%"
            @click.prevent="like">
         <i class="fas fa-heart"></i>
       </div>
+      <book-progress :progress="progress" :total="totalPages"/>
     </div>
   </div>
 </template>
@@ -25,10 +23,16 @@
   import { mapActions, mapGetters } from 'vuex';
   import uniqueIdGeneratorMixin from '@/common/helpers/uniqueIdsGenerator';
   import urlAuthMixin from "@/common/helpers/urlAuth";
+  import BookImage from "@/components/shared/BookImage";
+  import BookProgress from "@/components/shared/ProgressBar";
 
   export default {
     name: 'Book',
-    props: ['bookId', 'title', 'author', 'image', 'publishYear'],
+    props: ['bookId', 'title', 'author', 'image', 'publishYear', 'progress', 'totalPages'],
+    components: {
+      BookImage,
+      BookProgress
+    },
     mixins: [uniqueIdGeneratorMixin, urlAuthMixin],
     methods: {
       ...mapActions([
@@ -39,14 +43,6 @@
       },
       like() {
         // todo implement
-      },
-      getImage() {
-         return this.image || require('@/assets/GenericBookCover.jpg');
-      },
-      getAlternativeImage (event) {
-        if (event.target.naturalWidth === 1 || event.target.naturalHeight === 1) {
-            event.target.src = require('@/assets/GenericBookCover.jpg');
-        }
       },
       deleteAction() {
         this.deleteBook({ bookId: this.bookId });
@@ -93,10 +89,5 @@
   #bookContent:hover{
     border-color: gray;
     cursor:pointer;
-  }
-  #bookImg {
-    width: 40%;
-    height: 40%;
-    margin-bottom: 2%;
   }
 </style>

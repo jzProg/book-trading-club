@@ -6,6 +6,7 @@ const bookApi = {
       limit: 100,
       searchApiEndpoint: 'https://openlibrary.org/search.json',
       imagesEndpoint: 'https://covers.openlibrary.org/b/isbn/',
+      bookInfoEndpoint: 'https://openlibrary.org/api/books?bibkeys=ISBN:'
     }
   },
   methods: {
@@ -17,6 +18,9 @@ const bookApi = {
     },
     searchBookByTerm (term) {
       return axios.get(`${this.searchApiEndpoint}?q=${term}&fields=title,author_name,isbn,first_publish_year&limit=${this.limit}`);
+    },
+    getBookDetailedInfo(isbn) {
+      return axios.get(`${this.bookInfoEndpoint}${isbn}&jscmd=data&format=json`);
     }
   }
 }

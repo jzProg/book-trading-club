@@ -43,11 +43,18 @@ export default {
       })
     },
     onBookSelected (book) {
-      const bookId = book.isbn[0]
+      const bookId = book.isbn[0];
       const author = book.author_name[0];
       const image = this.getBookImage(book.isbn[0], 'L');
-      this.addNewBook({ ...book, bookId, author, image });
-      this.$router.push('/home');
+      this.getBookDetailedInfo(bookId).then(response => {
+        const res = Object.values(response.data)[0];
+        const description = res.subtitle || '';
+        const pages = res.number_of_pages;
+        const subject = res.subjects[0].name || '';
+        const publisher = res.publishers[0].name || '';
+        this.addNewBook({ ...book, bookId, author, image, description, pages, subject, publisher });
+        this.$router.push('/home');
+      })
     }
   }
 };

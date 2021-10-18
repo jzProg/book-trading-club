@@ -9,6 +9,8 @@
             :author="book.author"
             :image="book.image"
             :publish-year="book.first_publish_year"
+            :progress="book.progress"
+            :totalPages="book.pages"
             @selectBook="(event) => $emit('selectBook', event)">
       </Book>
     </div>
@@ -20,6 +22,7 @@ import Book from './Book.vue'
 
 export default{
   name: 'BookList',
+  emits: ['selectBook'],
   props: ['bookList'],
   components: {
     Book,

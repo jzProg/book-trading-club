@@ -68,6 +68,26 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    updateBookProgress ({ commit, state }, payload) {
+      const { books, userId } = state.userInfo;
+      const bookToBeEdited = books.find(book => {
+          return book.bookId === payload.bookId;
+      });
+      bookToBeEdited.progress = payload.progress;
+      return firebase.database().ref('users/' + userId).update({
+        books: [ ...books.filter(book => book.bookId !== payload.bookId), bookToBeEdited]
+      });
+    },
+    updateBookStatus ({ commit, state }, payload) {
+      const { books, userId } = state.userInfo;
+      const bookToBeEdited = books.find(book => {
+          return book.bookId === payload.bookId;
+      });
+      bookToBeEdited.category = payload.status;
+      return firebase.database().ref('users/' + userId).update({
+        books: [ ...books.filter(book => book.bookId !== payload.bookId), bookToBeEdited]
+      });
+    },
     addNewBook({ commit, state }, payload) {
       const { books, userId } = state.userInfo;
       const results = books.find(book => {
@@ -82,7 +102,12 @@ export default new Vuex.Store({
         author: payload.author,
         image: payload.image,
         first_publish_year: payload.first_publish_year,
-        category: 'Plan to Read'
+        category: 'Plan to Read',
+        description: payload.description,
+        publisher: payload.publisher,
+        subject: payload.subject,
+        pages: payload.pages,
+        progress: 0,
       }
       return firebase.database().ref('users/' + userId).update({
         books: [ ...books, newBook ]

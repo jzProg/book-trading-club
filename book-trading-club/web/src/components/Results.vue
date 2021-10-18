@@ -59,7 +59,11 @@ export default {
           title: book.title,
           author: book.author_name &&  book.author_name.length ? book.author_name[0] : 'Unknown author',
           image: this.getBookImage(book.isbn[0]),
-          first_publish_year: book.first_publish_year
+          first_publish_year: book.first_publish_year,
+          pages: book.pages,
+          publisher: book.publisher,
+          subject: book.subject,
+          description: book.description
         };
        });
     }

@@ -6,7 +6,8 @@
          @click.prevent="postBook">
       <i class="fas fa-plus"></i>
     </div>
-    <Books :bookList="getBooksByCategory"></Books>
+    <Books :bookList="getBooksByCategory" @selectBook="onSelectBook"/>
+    <edit-book v-if="showEdit" :bookInfo="selectedBook" @close="showEdit = false"/>
   </div>
 </template>
 
@@ -15,15 +16,20 @@
   import uniqueIdGeneratorMixin from '@/common/helpers/uniqueIdsGenerator';
   import bus from "@/common/eventBus";
   import { mapActions, mapGetters } from 'vuex';
+  import EditBook from "@/components/modals/EditBook";
 
   export default {
     name: 'Home',
-    components: { Books },
+    components: {
+      Books,
+      EditBook
+    },
     mixins: [uniqueIdGeneratorMixin],
     data() {
       return {
         userBooks: [],
-        showModal: false,
+        showEdit: false,
+        selectedBook: {}
       }
     },
     created() {
@@ -40,6 +46,11 @@
           'deleteBook',
           'storeUsername',
       ]),
+      onSelectBook (isbn) {
+        const book = this.getUserBooks.find(book => book.bookId === isbn);
+        this.selectedBook = book;
+        this.showEdit = true;
+      },
       postBook() {
         this.$router.push('/search');
       },
@@ -56,7 +67,7 @@
           'getSelectedCategory'
       ]),
       getBooksByCategory () {
-        return this.getUserBooks.filter(book => !book.category || book.category === this.getSelectedCategory)
+        return (this.getUserBooks || []).filter(book => !book.category || book.category === this.getSelectedCategory)
       }
     }
   }
