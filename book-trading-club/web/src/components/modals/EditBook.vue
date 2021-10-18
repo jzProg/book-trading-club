@@ -16,7 +16,12 @@
       </button>
       <br><br>
       <div v-if="bookInfo.category === statuses[0].type">
-         {{ bookInfo.progress }} / <span style="color: green">{{ bookInfo.pages }}</span> pages
+        <template v-if="editable">
+          <input type="number" v-model="currentProgress">
+          <i class="fas fa-check" style="cursor: pointer" @click.prevent="onChangeProgress"></i>
+         </template>
+         <span style="cursor: pointer" v-else @click.prevent="editable = true">{{ currentProgress }}</span>
+          / <span style="color: green">{{ bookInfo.pages }}</span> pages
       </div>
     </div>
   </Modal>
@@ -33,8 +38,13 @@
       props: {
         bookInfo: Object
       },
+      created () {
+        this.currentProgress = this.bookInfo.progress;
+      },
       data () {
         return {
+          editable: false,
+          currentProgress: 0,
           statuses: [
             { text: 'Read', type: 'Reading', color: 'btn btn-primary status' },
             { text: 'Completd', type: 'Completed', color: 'btn btn-success status'},
@@ -45,8 +55,13 @@
       components: { Modal, BookImage },
       methods: {
         ...mapActions([
-          'updateBookStatus'
+          'updateBookStatus',
+          'updateBookProgress'
         ]),
+        onChangeProgress() {
+          this.updateBookProgress({ bookId: this.bookInfo.bookId, progress: this.currentProgress });
+          this.editable = false;
+        },
         changeStatus(status) {
           this.updateBookStatus({ bookId: this.bookInfo.bookId, status });
         },
@@ -65,4 +80,8 @@
  .deselected {
    opacity: 0.5
  }
+
+ input[type='number']{
+    width: 40px;
+  }
 </style>

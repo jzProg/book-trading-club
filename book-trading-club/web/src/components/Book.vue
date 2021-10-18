@@ -14,7 +14,7 @@
            @click.prevent="like">
         <i class="fas fa-heart"></i>
       </div>
-      <book-progress :progress="progress" :total="totalPages"/>
+      <book-progress :progress="parseInt(progress)" :total="parseInt(totalPages)"/>
     </div>
   </div>
 </template>
