@@ -30,5 +30,7 @@ export default {
     width: 40%;
     height: 40%;
     margin-bottom: 2%;
+    max-height: 151px;
+   min-height: 151px;
   }
 </style>

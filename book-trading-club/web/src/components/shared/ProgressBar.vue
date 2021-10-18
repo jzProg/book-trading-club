@@ -23,7 +23,7 @@ export default {
  .outer {
     background-color: black;
     width: 100%;
-    height: 30px;
+    height: 15px;
     margin-top: 1%
  }
 </style>

@@ -13,24 +13,13 @@
          </div>
        </div>
       </div>
-      <div id="profileDiv" v-if="username">
-        <div v-if="$route.meta.hasProfileHeader">
-            <a @click.prevent="showOptions">
-              <img :src="getImage()"
-                   alt="profile image"
-                   class="profileItem"
-                   width="75px"
-                   height="75px"
-                   id="profileImg">
-            </a>
-        </div>
+      <div id="profileDiv" v-if="username && !notAuthPage()">
+        <i class="fas fa-user-circle fa-5x" v-if="$route.meta.hasProfileHeader"></i>
         <h4 style="margin-left: 2%; color: white"><b>{{ username }}</b></h4>
       </div>
-      <profile-modal v-if="showOptionsModal"
-                   class="fragment"
-                   :username="username"
-                   @logout="logout"
-                   @close="onOptionsClose"/>
+      <div v-if="username" style="margin: 1%">
+        <button class="btn btn-danger" @click.prevent="logout"><i class="fas fa-sign-out-alt"></i></button>
+      </div>
     </div>
     <div class="fragment">
       <router-view/>
@@ -50,7 +39,6 @@
   import 'firebase/auth';
   import { VBToggle } from 'bootstrap-vue';
   import 'bootstrap-vue/dist/bootstrap-vue.css';
-  import ProfileModal from '@/components/modals/ProfileModal';
   import Loading from '@/components/shared/Loading';
 
   export default {
@@ -60,13 +48,11 @@
     },
     mixins: [firebaseConfigProperties, urlAuthMixin],
     components: {
-      ProfileModal,
       Loading
     },
     data() {
       return {
         username: '',
-        showOptionsModal: false,
         categories: [
           { name: 'Reading', icon: 'fas fa-book-open'},
           { name: 'Completed', icon: 'fas fa-check-square'},
@@ -85,17 +71,8 @@
         'userLogout',
         'clearUserData',
       ]),
-      getImage() {
-        return require(`./assets/profile_default.png`);
-      },
       goToHome(){
         this.$router.push('/');
-      },
-      showOptions() {
-        this.showOptionsModal = true;
-      },
-      onOptionsClose() {
-        this.showOptionsModal = false;
       },
       fetchInitialUserInfo(mail)  {
         console.log('fetching user info...');
@@ -115,7 +92,6 @@
           }
       });},
       logout() {
-        this.onOptionsClose();
         this.userLogout().then(() => {
           this.clearUserData();
           this.$router.push('/');
@@ -159,11 +135,11 @@
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
+    color: gray;
   }
 
   body {
-    background-color: lightblue;
+    background-color: #282c34;
   }
 
   .NavHeader {
@@ -208,12 +184,7 @@
     justify-content: center;
     align-items: center;
     flex: 1;
-  }
-
-  #profileImg {
-    width: 80px;
-    height: 80px;
-    border-radius: 50px;
+    color: rgb(51, 122, 183);
   }
 
   .appLogo {

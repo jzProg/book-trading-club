@@ -8,14 +8,14 @@
             class="btn btn-primary"
             style="margin-top: 2%; margin-bottom: 2%"
             @click.prevent="searchForBook">
-      Search
+      <i class="fas fa-search"></i>
     </button>
     <results @select="onBookSelected"/>
   </div>
 </template>
 
 <script>
-import { mapMutations, mapActions } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 import Results from '@/components/Results';
 import bookApi from '@/common/BookApi';
 
@@ -49,13 +49,20 @@ export default {
       this.getBookDetailedInfo(bookId).then(response => {
         const res = Object.values(response.data)[0];
         const description = res.subtitle || '';
-        const pages = res.number_of_pages;
-        const subject = res.subjects[0].name || '';
-        const publisher = res.publishers[0].name || '';
+        const pages = res.number_of_pages || 0;
+        const subjects = res.subjects;
+        const subject = subjects && subjects.length ? subjects[0].name : '';
+        const publishers = res.publishers;
+        const publisher = publishers && publishers.length ? publishers[0].name : '';
         this.addNewBook({ ...book, bookId, author, image, description, pages, subject, publisher });
-        this.$router.push('/home');
+        this.setSearchResults({ value: this.getSearchResults.filter(doc => doc.isbn[0] !== bookId) });
       })
     }
+  },
+  computed: {
+    ...mapGetters([
+      'getSearchResults'
+    ]),
   }
 };
 </script>

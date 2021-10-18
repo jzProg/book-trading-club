@@ -9,6 +9,7 @@
             :author="book.author"
             :image="book.image"
             :publish-year="book.first_publish_year"
+            :category="book.category"
             :progress="book.progress"
             :totalPages="book.pages"
             @selectBook="(event) => $emit('selectBook', event)">

@@ -1,7 +1,7 @@
 <template>
   <div id="bookContainer" @click.prevent="$emit('selectBook', bookId)">
     <div id='bookContent'>
-      <span v-if='isLoggedInPage()' id='close' @click.prevent="deleteAction">x</span><br>
+      <span v-if='isLoggedInPage()' id='close' @click.prevent="deleteAction"><i class="fas fa-times"></i></span><br>
       <book-image :image="image"/>
       <div><b>{{ title }}</b></div>
       <div><i>{{ author }}</i></div>
@@ -14,7 +14,10 @@
            @click.prevent="like">
         <i class="fas fa-heart"></i>
       </div>
-      <book-progress :progress="parseInt(progress)" :total="parseInt(totalPages)"/>
+      <template v-if="category === 'Reading'">
+        <book-progress :progress="parseInt(progress)" :total="parseInt(totalPages)"/>
+        <div style="font-size: x-small; float: right">{{ progress }}/{{ totalPages }} pgs</div>
+      </template>
     </div>
   </div>
 </template>
@@ -28,7 +31,7 @@
 
   export default {
     name: 'Book',
-    props: ['bookId', 'title', 'author', 'image', 'publishYear', 'progress', 'totalPages'],
+    props: ['bookId', 'title', 'author', 'image', 'category', 'publishYear', 'progress', 'totalPages'],
     components: {
       BookImage,
       BookProgress
@@ -67,12 +70,15 @@
     max-height: 356px;
   }
   #bookContent{
+    border-radius: 15px;
     border-style: solid;
     min-height: 320px;
-    padding: 5%;
+    max-height: 320px;
+    padding: 1%;
     margin-bottom: 10%;
     margin-left: 10%;
     margin-right: 10%;
+    cursor:pointer;
   }
   #close {
     float:right;
@@ -85,9 +91,5 @@
   }
   #uploadedSection {
     margin: 2%;
-  }
-  #bookContent:hover{
-    border-color: gray;
-    cursor:pointer;
   }
 </style>

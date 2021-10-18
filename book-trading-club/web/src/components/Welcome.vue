@@ -2,7 +2,7 @@
  <div>
    <i v-if = "(!isLoggedIn() || notAuthPage()) &&  !isExcludedPage()"
       class = "fas fa-book fa-10x"
-      style = "color:green;margin-bottom: 2%">
+      style = "color:rgb(51, 122, 183);margin-bottom: 2%">
    </i>
    <h1 class = 'text-center'>{{ title }} </h1>
    <Login></Login>

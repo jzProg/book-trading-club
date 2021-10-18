@@ -1,10 +1,7 @@
 <template>
   <div>
-    <div id="addBookBtn"
-         class="btn btn-primary"
-         style="border-radius:40px"
-         @click.prevent="postBook">
-      <i class="fas fa-plus"></i>
+    <div id="addBookBtn">
+      <i class="fas fa-plus-circle fa-3x" @click.prevent="postBook"></i>
     </div>
     <Books :bookList="getBooksByCategory" @selectBook="onSelectBook"/>
     <edit-book v-if="showEdit" :bookInfo="selectedBook" @close="showEdit = false"/>
@@ -77,5 +74,7 @@
   #addBookBtn {
     float: left;
     margin-left: 10%;
+    color: rgb(51, 122, 183);
+    cursor: pointer;
   }
 </style>

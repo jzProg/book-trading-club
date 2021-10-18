@@ -1,43 +1,16 @@
 <template>
- <div id = 'container'>
-  <h1 class = 'text-center'>Be A Member!</h1>
-    <form style = "margin-top: 4%">
-        <div class = 'form-group'>
-          <label for = "username">Username: </label>
-          <input id = 'username'
-                 type = 'text'
-                 class = 'form-control'
-                 @focus = 'removeErrorMessage()'
-                 placeholder = 'enter username here'
-                 v-model = "enteredName">
-        </div>
-        <div class = 'form-group'>
-          <label for = "mail">Email: </label>
-          <input id = 'mail'
-                 type = 'email'
-                 class = 'form-control'
-                 @focus = 'removeErrorMessage()'
-                 placeholder = 'enter mail here'
-                 v-model = "enteredMail">
-        </div>
-        <div class = 'form-group'>
-          <label for = "pass">Password: </label>
-          <input id = 'pass'
-                 type = 'password'
-                 class = 'form-control'
-                 @focus = 'removeErrorMessage()'
-                 placeholder = 'enter password here'
-                 v-model = "enteredPass">
-        </div>
-        <span v-if = "getErrorRegisterMessage" id = "errorRegisterSpan"> {{ getErrorRegisterMessage }}</span>
-        <div id = 'buttonDiv'>
-         <button id = 'submitBtn'
-                 type = 'submit'
-                 class = 'btn btn-primary'
-                 @click.prevent = "register">Sign Up</button>
-         <router-link :to = "{ path:'/' }"> Already an account? Sign in here</router-link>
-       </div>
-    </form>
+ <div id="container" class="container">
+   <div id="rowDiv" class="row">
+     <h1 class="text-center registerTitle">Be A Member!</h1>
+     <input-form :fields="formItems"
+                :error-message="getErrorRegisterMessage"
+                :on-focus="removeErrorMessage"
+                :on-submit="register"/>
+     <div id="alreadyAccount">
+       <i>Already an account? </i>
+       <router-link :to = "{ path:'/' }">Sign in here</router-link>
+     </div>
+   </div>
  </div>
 </template>
 
@@ -45,17 +18,21 @@
   import uniqueIdGeneratorMixin from '@/common/helpers/uniqueIdsGenerator';
   import bus from "@/common/eventBus";
   import { mapActions, mapGetters, mapMutations } from 'vuex';
+  import InputForm from '@/components/shared/InputForm';
 
   export default {
     name: 'Register',
     mixins: [uniqueIdGeneratorMixin],
+    components: { InputForm },
     data () {
       return {
-        enteredName: '',
-        enteredMail: '',
-        enteredPass: '',
+        formItems: [
+          { type: 'text', id: 'username', text: 'Username', placeholder: 'enter username here' },
+          { type: 'text', id: 'email', text: 'Email', placeholder: 'enter mail here' },
+          { type: 'password', id: 'pass', text: 'Password', placeholder: 'enter password here' }
+        ],
         showModal: false,
-      }
+      };
     },
     created() {
       bus.$on('login', () => {
@@ -76,15 +53,15 @@
         'getUserLoginInfo',
         'storeUsername',
       ]),
-      register() {
+      register(values) {
         const newUserEntry = {
-          email: this.enteredMail,
-          password: this.enteredPass
+          email: values[1],
+          password: values[2],
         };
         this.userAuth(newUserEntry).then(() => {
-          this.storeUsername(this.enteredName);
+          this.storeUsername(values[0]);
           this.userLogin(newUserEntry).then(() => {
-            this.createUserProfile({ userId: this.guid(), username: this.enteredName, mail: this.enteredMail });
+            this.createUserProfile({ userId: this.guid(), username: values[0], mail: values[1] });
           });
         });
       },
@@ -101,21 +78,34 @@
 </script>
 
 <style scoped>
-  #container{
-    padding-left:30%;
-    padding-right:30%;
-    margin-top:5%;
+  .formContainer {
+    text-align: left;
   }
 
-  #submitBtn{
-    margin-right:2%;
+  .registerTitle {
+    margin-top: 5%;
   }
 
-  #buttonDiv{
-    margin-top:4%;
+  #container {
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  #submitBtn {
+    margin-right: 2%;
+  }
+
+  #alreadyAccount {
+    margin-top: 2%;
   }
 
   #errorRegisterSpan {
     color: red;
+  }
+
+  @media only screen and (max-width: 750px) {
+    #container {
+      width: 40%;
+    }
   }
 </style>

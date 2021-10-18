@@ -1,50 +1,35 @@
 <template>
-  <div id = 'container'>
-    <form>
-        <div class = 'form-group'>
-          <label for = "email">Email: </label>
-          <input id = 'email'
-                 type = 'text'
-                 class = 'form-control'
-                 placeholder = 'enter email here'
-                 @focus = 'removeErrorMessage()'
-                 v-model = "enteredMail">
-        </div>
-        <div class = 'form-group'>
-          <label for = "pass">Password: </label>
-          <input id = 'pass'
-                 type = 'password'
-                 class = 'form-control'
-                 placeholder = 'enter password here'
-                 @focus = 'removeErrorMessage()'
-                 v-model = "enteredPass">
-        </div>
-        <span id = 'errorMessageSpan' v-if = "getErrorLoginMessage">{{ getErrorLoginMessage }}</span>
-        <div id = 'buttonDiv'>
-         <button id = 'submitBtn'
-                 type = 'submit'
-                 class = 'btn btn-primary'
-                 @click.prevent = "login">
-           Sign In
-         </button>
-         <router-link :to = "{ path:'register' }"> Not registered? Sign up here</router-link>
-       </div>
-    </form>
+  <div id="container" class="container">
+    <div id="rowDiv" class="row">
+      <InputForm :fields="formItems"
+                 :error-message="getErrorLoginMessage"
+                 :on-focus="removeErrorMessage"
+                 :on-submit="login"/>
+      <div id="notRegistered">
+        <i>Not registered? </i>
+        <router-link :to = "{ path:'register' }">Sign up here</router-link>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-  import uniqueIdGeneratorMixin from '@/common/helpers/uniqueIdsGenerator';
   import { mapActions, mapGetters, mapMutations } from 'vuex';
+  import InputForm from '@/components/shared/InputForm';
+
+  import uniqueIdGeneratorMixin from '@/common/helpers/uniqueIdsGenerator';
 
   export default {
     name: 'Login',
     mixins: [uniqueIdGeneratorMixin],
+    components: { InputForm },
     data () {
       return {
-        enteredMail: '',
-        enteredPass: '',
-      }
+        formItems: [
+          { type: 'text', id: 'email', text: 'Email', placeholder: 'enter email here' },
+          { type: 'password', id: 'pass', text: 'Password', placeholder: 'enter password here' }
+        ],
+      };
     },
     mounted() {
       this.removeErrorMessage();
@@ -56,8 +41,8 @@
       ...mapActions([
         'userLogin',
       ]),
-      login() {
-       this.userLogin({ email: this.enteredMail, password: this.enteredPass });
+      login(values) {
+        this.userLogin({ email: values[0], password: values[1] });
       },
       removeErrorMessage() {
         this.setLoginErrorMessage({ value: '' });
@@ -72,21 +57,30 @@
 </script>
 
 <style scoped>
-#errorMessageSpan {
-  color: red;
-}
+  .formContainer {
+    text-align: left;
+  }
 
-#container{
-  padding-left:30%;
-  padding-right:30%;
-  margin-top:5%;
-}
+  #errorMessageSpan {
+    color: red;
+  }
 
-#submitBtn{
-  margin-right:2%;
-}
+  #container {
+    margin: 0 auto;
+    width: 100%;
+  }
 
-#buttonDiv{
-  margin-top:4%;
+  #submitBtn {
+    margin-right: 2%;
+  }
+
+  #notRegistered {
+    margin-top: 2%;
+  }
+
+  @media only screen and (max-width: 750px) {
+    #container {
+      width: 40%;
+    }
 }
 </style>
