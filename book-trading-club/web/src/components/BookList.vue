@@ -19,6 +19,7 @@
               :category="book.category"
               :progress="book.progress"
               :totalPages="book.pages"
+              :liked="book.liked"
               @selectBook="(event) => $emit('selectBook', event)">
         </Book>
       </div>

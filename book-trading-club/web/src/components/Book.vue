@@ -6,7 +6,7 @@
       <div><b>{{ title }}</b></div>
       <div><i>{{ author }}</i></div>
       <div style="color: green">{{ publishYear }}</div>
-      <i v-if="!notAuthPage()" :class="[liked ? 'fas' : 'far', 'fa-heart']"></i>
+      <i v-if="!notAuthPage()" :class="[liked ? 'fas' : 'far', 'fa-heart']" style="color: red"></i>
       <template v-if="category === 'Reading'">
         <book-progress :progress="parseInt(progress)" :total="parseInt(totalPages)"/>
         <div style="font-size: x-small; float: right">{{ progress }}/{{ totalPages }} pgs</div>
@@ -36,9 +36,6 @@
       ]),
       isUserLoggedIn() {
         return localStorage.getItem('token');
-      },
-      toggleLike() {
-        // todo implement
       },
       deleteAction() {
         this.deleteBook({ bookId: this.bookId });

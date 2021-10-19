@@ -7,7 +7,7 @@
       <book-image :image="bookInfo.image"/>
       <p>{{ bookInfo.subject }}</p>
       <p>{{ bookInfo.description }}</p>
-      <i :class="[bookInfo.liked ? 'fas' : 'far', 'fa-heart fa-2x']" style="cursor: pointer" @click.prevent="toggleLike"></i>
+      <i :class="[bookInfo.liked ? 'fas' : 'far', 'fa-heart fa-2x']" style="cursor: pointer; color:red" @click.prevent="toggleLike"></i>
       <p>publisher <i style="color:blue">{{ bookInfo.publisher }}</i></p>
       <button type="button"
               @click.prevent="changeStatus(status.type)"
@@ -57,7 +57,8 @@
       methods: {
         ...mapActions([
           'updateBookStatus',
-          'updateBookProgress'
+          'updateBookProgress',
+          'toggleLiked'
         ]),
         onChangeProgress() {
           this.updateBookProgress({ bookId: this.bookInfo.bookId, progress: this.currentProgress });
@@ -65,6 +66,9 @@
         },
         changeStatus(status) {
           this.updateBookStatus({ bookId: this.bookInfo.bookId, status });
+        },
+        toggleLike() {
+          this.toggleLiked({ bookId: this.bookInfo.bookId });
         },
         close() {
           this.$emit('close');

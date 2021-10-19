@@ -68,6 +68,16 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    toggleLiked ({ commit, state }, payload) {
+      const { books, userId } = state.userInfo;
+      const bookToBeEdited = books.find(book => {
+          return book.bookId === payload.bookId;
+      });
+      bookToBeEdited.liked = !bookToBeEdited.liked;
+      return firebase.database().ref('users/' + userId).update({
+        books: [ ...books.filter(book => book.bookId !== payload.bookId), bookToBeEdited]
+      });
+    },
     updateBookProgress ({ commit, state }, payload) {
       const { books, userId } = state.userInfo;
       const bookToBeEdited = books.find(book => {

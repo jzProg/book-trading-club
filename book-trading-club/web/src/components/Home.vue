@@ -26,7 +26,7 @@
       return {
         userBooks: [],
         showEdit: false,
-        selectedBook: {}
+        selectedBookIsbn: null
       }
     },
     created() {
@@ -44,8 +44,7 @@
           'storeUsername'
       ]),
       onSelectBook (isbn) {
-        const book = this.getUserBooks.find(book => book.bookId === isbn);
-        this.selectedBook = book;
+        this.selectedBookIsbn = isbn;
         this.showEdit = true;
       },
       postBook() {
@@ -67,7 +66,7 @@
         return (this.getUserBooks || []).filter(book => !book.category || book.category === this.getSelectedCategory)
       },
       getSelectedBook () {
-        return { ...this.selectedBook };
+        return this.getUserBooks.find(book => book.bookId === this.selectedBookIsbn);
       }
     }
   }
