@@ -3,8 +3,8 @@
     <div id="addBookBtn">
       <i class="fas fa-plus-circle fa-3x" @click.prevent="postBook"></i>
     </div>
-    <Books :bookList="getBooksByCategory" @selectBook="onSelectBook"/>
-    <edit-book v-if="showEdit" :bookInfo="selectedBook" @close="showEdit = false"/>
+    <books :book-list="getBooksByCategory" @selectBook="onSelectBook"/>
+    <edit-book v-if="showEdit" :bookInfo="getSelectedBook" @close="showEdit = false"/>
   </div>
 </template>
 
@@ -41,7 +41,7 @@
           'fetchBooks',
           'addNewBook',
           'deleteBook',
-          'storeUsername',
+          'storeUsername'
       ]),
       onSelectBook (isbn) {
         const book = this.getUserBooks.find(book => book.bookId === isbn);
@@ -65,6 +65,9 @@
       ]),
       getBooksByCategory () {
         return (this.getUserBooks || []).filter(book => !book.category || book.category === this.getSelectedCategory)
+      },
+      getSelectedBook () {
+        return { ...this.selectedBook };
       }
     }
   }
