@@ -7,7 +7,7 @@
       <book-image :image="bookInfo.image"/>
       <p>{{ bookInfo.subject }}</p>
       <p>{{ bookInfo.description }}</p>
-      <i :class="[bookInfo.liked ? 'fas' : 'far', 'fa-heart fa-2x']" style="cursor: pointer; color:red" @click.prevent="toggleLike"></i>
+      <heart :liked="bookInfo.liked" @clicked="toggleLike"/>
       <p>publisher <i style="color:blue">{{ bookInfo.publisher }}</i></p>
       <button type="button"
               @click.prevent="changeStatus(status.type)"
@@ -32,6 +32,7 @@
   import  { mapActions } from 'vuex';
   import Modal from './GenericModalStructure.vue';
   import BookImage from "@/components/shared/BookImage";
+  import Heart from '@/components/shared/Heart';
 
   export default {
       name: 'EditBook',
@@ -53,7 +54,7 @@
           ]
         }
       },
-      components: { Modal, BookImage },
+      components: { Modal, BookImage, Heart },
       methods: {
         ...mapActions([
           'updateBookStatus',
