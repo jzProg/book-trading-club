@@ -65,7 +65,8 @@
         'setLoginUsername',
         'setBookList',
         'setUserId',
-        'setSelectedCategory'
+        'setSelectedCategory',
+        'storeNumberOfUsers'
       ]),
       ...mapActions([
         'userLogout',
@@ -77,6 +78,7 @@
       fetchInitialUserInfo(mail)  {
         console.log('fetching user info...');
         firebase.database().ref('users/').on("value", (userObject) => {
+          this.storeNumberOfUsers({ value: userObject.numChildren() });
           if (userObject.val()) {
             Object.values(userObject.val()).forEach((user) => {
               if (user.mail.toLowerCase() === mail.toLowerCase()) {

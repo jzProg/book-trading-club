@@ -11,6 +11,7 @@
         <book-progress :progress="parseInt(progress)" :total="parseInt(totalPages)"/>
         <div style="font-size: x-small; float: right">{{ progress }}/{{ totalPages }} pgs</div>
       </template>
+      <rating v-if="isInPath('search')" :rates="getBookRating()"/>
     </div>
   </div>
 </template>
@@ -22,6 +23,7 @@
   import BookImage from '@/components/shared/BookImage';
   import BookProgress from '@/components/shared/ProgressBar';
   import Heart from '@/components/shared/Heart';
+  import Rating from '@/components/shared/Rating';
 
   export default {
     name: 'Book',
@@ -29,7 +31,8 @@
     components: {
       BookImage,
       BookProgress,
-      Heart
+      Heart,
+      Rating
     },
     mixins: [uniqueIdGeneratorMixin, urlAuthMixin],
     methods: {
@@ -47,11 +50,16 @@
       },
       goToProfile() {
         this.$router.push(`/profile?user=${this.postedBy}`);
-      }
+      },
+      getBookRating() {
+        const matchingBook =  this.getRatings[this.bookId];
+        return matchingBook ? matchingBook.rating : 0;
+      },
     },
     computed: {
       ...mapGetters([
           'getLoginUsername',
+          'getRatings'
       ])
     }
   }

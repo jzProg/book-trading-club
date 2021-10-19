@@ -35,13 +35,15 @@
           this.storeUsername(username);
         });
       }
+      this.fetchBookRatings();
     },
     methods: {
       ...mapActions([
           'fetchBooks',
           'addNewBook',
           'deleteBook',
-          'storeUsername'
+          'storeUsername',
+          'fetchBookRatings'
       ]),
       onSelectBook (isbn) {
         this.selectedBookIsbn = isbn;

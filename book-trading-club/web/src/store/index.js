@@ -16,9 +16,17 @@ export default new Vuex.Store({
     errorLoginMessage: '',
     errorRegisterMessage: '',
     load: false,
-    selectedCategory: 'Reading'
+    selectedCategory: 'Reading',
+    users: 0,
+    ratings: {}
   },
   getters: {
+    getRatings(state) {
+      return state.ratings;
+    },
+    getNumberOfUsers(state) {
+      return state.users;
+    },
     getSelectedCategory(state) {
       return state.selectedCategory;
     },
@@ -42,6 +50,13 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    setRatings(state, payload) {
+      const { value } = payload;
+      state.ratings = value;
+    },
+    storeNumberOfUsers(state, payload) {
+      state.users = payload.value;
+    },
     setSelectedCategory(state, payload) {
       state.selectedCategory = payload.value;
     },
@@ -68,12 +83,31 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    toggleLiked ({ commit, state }, payload) {
+    fetchBookRatings({ commit, state }) {
+      const bookEntry = firebase.database().ref('books/').on("value", (bookObject) => {
+        commit({ type: 'setRatings', value: bookObject.val() });
+      })
+    },
+    initBookEntry({ commit, state }, payload) {
+      const { isbn } = payload;
+      return firebase.database().ref('books/' + isbn).set({
+        id: isbn,
+        rating: 0
+      });
+    },
+    rateBook({ commit, state }, payload) {
+      const { isbn, liked } = payload;
+      return firebase.database().ref('books/' + isbn).update({
+        rating: liked ? firebase.database.ServerValue.increment(1) : firebase.database.ServerValue.increment(-1)
+      });
+    },
+    toggleLiked ({ commit, state, dispatch }, payload) {
       const { books, userId } = state.userInfo;
       const bookToBeEdited = books.find(book => {
           return book.bookId === payload.bookId;
       });
       bookToBeEdited.liked = !bookToBeEdited.liked;
+      dispatch('rateBook', { isbn: payload.bookId, liked: bookToBeEdited.liked });
       return firebase.database().ref('users/' + userId).update({
         books: [ ...books.filter(book => book.bookId !== payload.bookId), bookToBeEdited]
       });
@@ -98,7 +132,7 @@ export default new Vuex.Store({
         books: [ ...books.filter(book => book.bookId !== payload.bookId), bookToBeEdited]
       });
     },
-    addNewBook({ commit, state }, payload) {
+    addNewBook({ commit, state, dispatch }, payload) {
       const { books, userId } = state.userInfo;
       const results = books.find(book => {
           return book.bookId === payload.bookId;
@@ -106,6 +140,7 @@ export default new Vuex.Store({
       if (results) {
         return;
       }
+      dispatch('initBookEntry', { isbn: payload.bookId });
       const newBook = {
         bookId: payload.bookId,
         title: payload.title,

@@ -5,6 +5,7 @@
     <div slot = "body">
       <p>{{ bookInfo.author }}</p>
       <book-image :image="bookInfo.image"/>
+      <rating :rates="getBookRating()"/>
       <p>{{ bookInfo.subject }}</p>
       <p>{{ bookInfo.description }}</p>
       <heart :liked="bookInfo.liked" @clicked="toggleLike"/>
@@ -29,10 +30,11 @@
 </template>
 
 <script>
-  import  { mapActions } from 'vuex';
+  import  { mapGetters, mapActions } from 'vuex';
   import Modal from './GenericModalStructure.vue';
   import BookImage from "@/components/shared/BookImage";
   import Heart from '@/components/shared/Heart';
+  import Rating from '@/components/shared/Rating';
 
   export default {
       name: 'EditBook',
@@ -54,13 +56,17 @@
           ]
         }
       },
-      components: { Modal, BookImage, Heart },
+      components: { Modal, BookImage, Heart, Rating },
       methods: {
         ...mapActions([
           'updateBookStatus',
           'updateBookProgress',
           'toggleLiked'
         ]),
+        getBookRating() {
+          const matchingBook =  this.getRatings[this.bookInfo.bookId];
+          return matchingBook ? matchingBook.rating : 0;
+        },
         onChangeProgress() {
           this.updateBookProgress({ bookId: this.bookInfo.bookId, progress: this.currentProgress });
           this.editable = false;
@@ -75,6 +81,11 @@
           this.$emit('close');
         }
       },
+      computed: {
+        ...mapGetters([
+          'getRatings'
+        ])
+      }
   }
 </script>
 
