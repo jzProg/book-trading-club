@@ -3,7 +3,6 @@ import Router from 'vue-router';
 import Welcome from '@/components/Welcome';
 import Register from '@/components/Register';
 import Home from '@/components/Home';
-import Profile from '@/components/Profile';
 import Search from '@/components/Search';
 
 Vue.use(Router);
@@ -40,13 +39,15 @@ export default new Router({
       path: '/search',
       name: 'search',
       meta: { hasProfileHeader: true },
-      component: Search
+      component: Search,
+      beforeEnter: (to, from, next) => {
+        if (localStorage.getItem('token')) next();
+        else next('/');
+      }
     },
     {
-      path: '/profile',
-      name: 'Profile',
-      meta: { hasProfileHeader: true },
-      component: Profile
+      path: '*',
+      redirect: '/'
     }
   ]
 })

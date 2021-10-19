@@ -56,13 +56,13 @@ export default {
         const publisher = publishers && publishers.length ? publishers[0].name : '';
         this.addNewBook({ ...book, bookId, author, image, description, pages, subject, publisher });
         this.setSearchResults({ value: this.getSearchResults.filter(doc => doc.isbn[0] !== bookId) });
-      })
+      });
     }
   },
   computed: {
     ...mapGetters([
       'getSearchResults'
-    ]),
+    ])
   }
 };
 </script>

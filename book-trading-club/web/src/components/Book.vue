@@ -6,14 +6,7 @@
       <div><b>{{ title }}</b></div>
       <div><i>{{ author }}</i></div>
       <div style="color: green">{{ publishYear }}</div>
-      <div v-if="isUserLoggedIn()"
-           id="likeBtn"
-           disabled
-           class="btn btn-danger"
-           style="border-radius:50%; height:20%; width:14%; padding:2%; margin-top:2%"
-           @click.prevent="like">
-        <i class="fas fa-heart"></i>
-      </div>
+      <i v-if="!notAuthPage()" :class="[liked ? 'fas' : 'far', 'fa-heart']"></i>
       <template v-if="category === 'Reading'">
         <book-progress :progress="parseInt(progress)" :total="parseInt(totalPages)"/>
         <div style="font-size: x-small; float: right">{{ progress }}/{{ totalPages }} pgs</div>
@@ -25,13 +18,13 @@
 <script>
   import { mapActions, mapGetters } from 'vuex';
   import uniqueIdGeneratorMixin from '@/common/helpers/uniqueIdsGenerator';
-  import urlAuthMixin from "@/common/helpers/urlAuth";
-  import BookImage from "@/components/shared/BookImage";
-  import BookProgress from "@/components/shared/ProgressBar";
+  import urlAuthMixin from '@/common/helpers/urlAuth';
+  import BookImage from '@/components/shared/BookImage';
+  import BookProgress from '@/components/shared/ProgressBar';
 
   export default {
     name: 'Book',
-    props: ['bookId', 'title', 'author', 'image', 'category', 'publishYear', 'progress', 'totalPages'],
+    props: ['bookId', 'title', 'author', 'image', 'category', 'publishYear', 'progress', 'totalPages', 'liked'],
     components: {
       BookImage,
       BookProgress
@@ -44,7 +37,7 @@
       isUserLoggedIn() {
         return localStorage.getItem('token');
       },
-      like() {
+      toggleLike() {
         // todo implement
       },
       deleteAction() {
@@ -60,7 +53,7 @@
     computed: {
       ...mapGetters([
           'getLoginUsername',
-      ]),
+      ])
     }
   }
 </script>

@@ -60,7 +60,7 @@ export default{
      return this.bookList.sort((book1, book2) => {
        return book1.title > book2.title;
      }).slice(startIndex, startIndex + this.pageLimit);
-   },
+   }
   }
 }
 </script>

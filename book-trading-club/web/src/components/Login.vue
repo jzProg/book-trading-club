@@ -16,7 +16,6 @@
 <script>
   import { mapActions, mapGetters, mapMutations } from 'vuex';
   import InputForm from '@/components/shared/InputForm';
-
   import uniqueIdGeneratorMixin from '@/common/helpers/uniqueIdsGenerator';
 
   export default {
@@ -52,7 +51,7 @@
       ...mapGetters([
           'getErrorLoginMessage',
       ]),
-    },
+    }
   }
 </script>
 

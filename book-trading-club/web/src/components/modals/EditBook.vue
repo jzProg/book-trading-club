@@ -1,13 +1,14 @@
 <template>
   <Modal>
-    <span slot = "close" id = 'closeSymbol' @click.prevent = "close">x</span><br>
+    <span slot = "close" id = 'closeSymbol' @click.prevent = "close"><i class="fas fa-times"></i></span><br>
     <h3 slot = "header">{{ bookInfo.title }}</h3>
     <div slot = "body">
       <p>{{ bookInfo.author }}</p>
       <book-image :image="bookInfo.image"/>
       <p>{{ bookInfo.subject }}</p>
       <p>{{ bookInfo.description }}</p>
-      <p>publisher <i>{{ bookInfo.publisher }}</i></p>
+      <i :class="[bookInfo.liked ? 'fas' : 'far', 'fa-heart fa-2x']" style="cursor: pointer" @click.prevent="toggleLike"></i>
+      <p>publisher <i style="color:blue">{{ bookInfo.publisher }}</i></p>
       <button type="button"
               @click.prevent="changeStatus(status.type)"
               v-for="status in statuses"
