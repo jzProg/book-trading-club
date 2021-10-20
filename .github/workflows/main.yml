@@ -25,8 +25,6 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       
-      - name: change folder
-        run: cd book-trading-club/web
-        
-      - name: build
+      - name: setup working folder + build
+        working-directory: ./book-trading-club/web
         run: npm run build --if-present
