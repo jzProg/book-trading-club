@@ -27,4 +27,6 @@ jobs:
       
       - name: setup working folder + build
         working-directory: ./book-trading-club/web
-        run: npm run build --if-present
+        run: |
+           npm install
+           npm run build --if-present
