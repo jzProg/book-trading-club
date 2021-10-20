@@ -1,6 +1,6 @@
 # Book Track
 
-[![GitHub Actions Status Badge](https://github.com/jzProg/book-trading-club/workflows/CI/badge.svg)](https://github.com/jzProg/book-trading-club/actions/workflows/ci.yml)
+[![GitHub Actions Status Badge](https://github.com/jzProg/book-trading-club/workflows/CI/badge.svg)](https://github.com/jzProg/book-trading-club/actions/workflows/main.yml)
 [![Demo](https://img.shields.io/badge/demo-online-green.svg)](https://book-trading-club-24f23.web.app/)
 
 A book tracking app written in Vue.js. Users can search, add, categorize and rate books.
