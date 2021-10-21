@@ -7,7 +7,7 @@
       <div class="container" v-if="username && !notAuthPage()">
        <div class="row">
          <div :class="['col-md-4 categoryItem', { selected: category.name === getSelectedCategory }]"
-              @click.prevent="setSelectedCategory({ value: category.name })"
+              @click.prevent="updateKey++; setSelectedCategory({ value: category.name })"
               v-for="(category, index) in categories">
            <h3><i :class="category.icon"></i> <b>{{ category.name }}</b></h3><br>
          </div>
@@ -21,7 +21,7 @@
         <button class="btn btn-danger" @click.prevent="logout"><i class="fas fa-sign-out-alt"></i></button>
       </div>
     </div>
-    <div class="fragment">
+    <div class="fragment" :key="updateKey">
       <router-view/>
     </div>
     <Loading v-if="getLoad"/>
@@ -57,7 +57,8 @@
           { name: 'Reading', icon: 'fas fa-book-open'},
           { name: 'Completed', icon: 'fas fa-check-square'},
           { name: 'Plan to Read',  icon: 'fas fa-stream'}
-        ]
+        ],
+        updateKey: 0
       };
     },
     methods: {

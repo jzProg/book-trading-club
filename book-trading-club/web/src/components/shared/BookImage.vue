@@ -2,8 +2,7 @@
   <img :class="'book'"
        id="bookImg"
        :src='getImage()'
-       @load="getAlternativeImage($event)"
-       alt="book cover">
+       @load="getAlternativeImage($event)">
 </template>
 
 <script>
@@ -27,10 +26,11 @@ export default {
 
 <style scoped>
   #bookImg {
-    width: 40%;
-    height: 40%;
-    margin-bottom: 2%;
-    max-height: 151px;
+   width: 40%;
+   height: 40%;
+   margin-bottom: 2%;
+   max-height: 151px;
    min-height: 151px;
+   background: transparent url('../../assets/load.gif') center no-repeat;
   }
 </style>
