@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin-top: 2%">
     <pagination v-if="bookList.length > pageLimit"
                 :page="page"
                 :page-limit="pageLimit"

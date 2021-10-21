@@ -1,15 +1,13 @@
 <template>
   <div>
-    <input type="text"
-           placeholder="search term"
-           @keyup.enter="searchForBook"
-           v-model="enteredTerm">
-    <button type="button"
-            class="btn btn-primary"
-            style="margin-top: 2%; margin-bottom: 2%"
-            @click.prevent="searchForBook">
+    <div class="searchContainer">
+      <input type="text"
+             class="searchInput"
+             placeholder="search book title"
+             @keyup.enter="searchForBook"
+             v-model="enteredTerm">
       <i class="fas fa-search"></i>
-    </button>
+    </div>
     <results @select="onBookSelected"/>
   </div>
 </template>
@@ -66,3 +64,40 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+  .searchContainer {
+    background-color: white;
+    margin: 0 auto;
+    width: 10%;
+    height: 30px;
+    border-radius: 25px;
+  }
+
+  .searchInput {
+    border: none;
+    outline: none;
+    margin-top: 2%;
+  }
+
+  @media only screen and (max-width: 1800px) {
+    .searchContainer {
+      width: 20%;
+      height: 35px;
+    }
+  }
+
+  @media only screen and (max-width: 910px) {
+    .searchContainer {
+      width: 30%;
+      height: 35px;
+    }
+  }
+
+  @media only screen and (max-width: 680px) {
+    .searchContainer {
+      width: 50%;
+      height: 35px;
+    }
+  }
+</style>
