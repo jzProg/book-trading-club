@@ -6,7 +6,7 @@
                 :list-size="bookList.length"
                 @next="goToNextPage"
                 @prev="goToPreviousPage"/>
-    <div id='bookListContent' class="container">
+    <div id='bookListContent' class="container" :key="page">
       <div class="row">
         <Book v-for='(book,index) in sortedBookList'
               class="col-md-4"
