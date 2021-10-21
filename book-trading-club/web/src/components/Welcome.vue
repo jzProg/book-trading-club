@@ -1,6 +1,6 @@
 <template>
  <div>
-   <i v-if="(!isLoggedIn() || notAuthPage()) &&  !isExcludedPage()" class="fas fa-book fa-10x" id="logo"></i>
+   <i v-if="(!isLoggedIn() || !isHome)" class="fas fa-book fa-10x" id="logo"></i>
    <h1 class="text-center">
      {{ title }}
    </h1>

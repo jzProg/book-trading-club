@@ -1,26 +1,10 @@
 <template>
   <div id="app">
-    <div class="NavHeader">
-      <h3 id="logoDiv" @click.prevent="goToHome">
-          <b><span style="color: rgb(46, 109, 164)">B</span>ook <span style="color: rgb(46, 109, 164)">T</span>rack</b>
-      </h3>
-      <div class="container" v-if="username && !notAuthPage()">
-       <div class="row">
-         <div :class="['col-md-4 categoryItem', { selected: category.name === getSelectedCategory }]"
-              @click.prevent="updateKey++; setSelectedCategory({ value: category.name })"
-              v-for="(category, index) in categories">
-           <h3><i :class="category.icon"></i> <b>{{ category.name }}</b></h3><br>
-         </div>
-       </div>
-      </div>
-      <div id="profileDiv" v-if="username && !notAuthPage()">
-        <i class="fas fa-user-circle fa-5x" v-if="$route.meta.hasProfileHeader"></i>
-        <h4 style="margin-left: 2%; color: white"><b>{{ username }}</b></h4>
-      </div>
-      <div v-if="username" style="margin: 1%">
-        <button class="btn btn-danger" @click.prevent="logout"><i class="fas fa-sign-out-alt"></i></button>
-      </div>
-    </div>
+    <nav-bar :categories="categories"
+             :username="username"
+             @categorySelected="(category) => { updateKey++; setSelectedCategory({ value: category.name }) }"
+             @navigateToHome="goToHome"
+             @logout="logout"/>
     <div class="fragment" :key="updateKey">
       <router-view/>
     </div>
@@ -29,26 +13,25 @@
 </template>
 
 <script>
+  import { mapActions, mapGetters, mapMutations } from 'vuex';
   import Vue from 'vue';
   import bus from '@/common/eventBus';
   import firebaseConfigProperties from '@/common/firebaseConfigProperties';
-  import urlAuthMixin from '@/common/helpers/urlAuth';
-  import { mapActions, mapGetters, mapMutations } from 'vuex';
   import firebase from 'firebase/app';
   import 'firebase/database';
   import 'firebase/auth';
-  import { VBToggle } from 'bootstrap-vue';
-  import 'bootstrap-vue/dist/bootstrap-vue.css';
   import Loading from '@/components/shared/Loading';
+  import NavBar from '@/components/shared/NavBar';
 
   export default {
     name: 'app',
     directives: {
       'b-toggle': VBToggle
     },
-    mixins: [firebaseConfigProperties, urlAuthMixin],
+    mixins: [firebaseConfigProperties],
     components: {
-      Loading
+      Loading,
+      NavBar
     },
     data() {
       return {
@@ -126,8 +109,7 @@
     },
     computed: {
       ...mapGetters([
-        'getLoad',
-        'getSelectedCategory'
+        'getLoad'
       ]),
     }
 }
@@ -143,59 +125,6 @@
 
   body {
     background-color: #282c34;
-  }
-
-  .NavHeader {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-start;
-    background-color: black;
-    align-content: space-between;
-    margin-bottom: 2%;
-  }
-
-  .profileItem {
-    margin: 2%;
-    cursor: pointer;
-  }
-
-  #logoDiv {
-   color: white;
-   cursor: pointer;
-   margin-left: 2%;
-   flex: 1;
-  }
-
-  .categoryItem {
-   color: gray;
-   cursor: pointer;
-   flex: 1;
-  }
-
-  .categoryItem:hover {
-     color: white;
-  }
-
-  .selected {
-     color: white;
-  }
-
-  #profileDiv {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    flex: 1;
-    color: rgb(51, 122, 183);
-  }
-
-  .appLogo {
-    flex: 3;
-  }
-
-  .appLogoCenter {
-     flex: 4;
   }
 
   .fragment {
@@ -215,12 +144,5 @@
     -webkit-border-radius: 10px;
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
-  }
-
-  @media only screen and (max-width: 980px) {
-    .appLogo img {
-      width: 50px !important;
-      height: 50px !important;
-    }
   }
 </style>

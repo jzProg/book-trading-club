@@ -1,12 +1,12 @@
 <template>
   <div id="bookContainer" @click.prevent="$emit('selectBook', bookId)">
     <div id='bookContent'>
-      <span v-if='isLoggedInPage()' id='close' @click.prevent="deleteAction"><i class="fas fa-times"></i></span><br>
+      <span v-if='isLoggedInPage' id='close' @click.prevent="deleteAction"><i class="fas fa-times"></i></span><br>
       <book-image :image="image"/>
       <div><b>{{ title }}</b></div>
       <div><i>{{ author }}</i></div>
       <div style="color: green">{{ publishYear }}</div>
-      <heart v-if="!notAuthPage()" :liked="liked" :small="true"/>
+      <heart v-if="isHome" :liked="liked" :small="true"/>
       <template v-if="category === 'Reading'">
         <book-progress :progress="parseInt(progress)" :total="parseInt(totalPages)"/>
         <div style="font-size: x-small; float: right">{{ progress }}/{{ totalPages }} pgs</div>
