@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <nav-bar :categories="categories"
-             :username="username"
+             :username="getUsername"
              @categorySelected="(category) => { updateKey++; setSelectedCategory({ value: category.name }) }"
              @navigateToHome="goToHome"
              @logout="logout"/>
@@ -25,9 +25,6 @@
 
   export default {
     name: 'app',
-    directives: {
-      'b-toggle': VBToggle
-    },
     mixins: [firebaseConfigProperties],
     components: {
       Loading,
@@ -111,6 +108,9 @@
       ...mapGetters([
         'getLoad'
       ]),
+      getUsername() {
+        return this.username;
+      }
     }
 }
 </script>

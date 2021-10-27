@@ -19,7 +19,7 @@
       <br><br>
       <div v-if="bookInfo.category === statuses[0].type">
         <template v-if="editable">
-          <input type="number" v-model="currentProgress">
+          <input type="number" v-model="currentProgress" min="0" :max="bookInfo.pages">
           <i class="fas fa-check" style="cursor: pointer" @click.prevent="onChangeProgress"></i>
          </template>
          <span style="cursor: pointer" v-else @click.prevent="editable = true">{{ currentProgress }}</span>
@@ -68,6 +68,7 @@
           return matchingBook ? matchingBook.rating : 0;
         },
         onChangeProgress() {
+          if (this.currentProgress < 0 || this.currentProgress > this.bookInfo.pages) return;
           this.updateBookProgress({ bookId: this.bookInfo.bookId, progress: this.currentProgress });
           this.editable = false;
         },
