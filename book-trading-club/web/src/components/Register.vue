@@ -60,8 +60,8 @@
         };
         this.userAuth(newUserEntry).then(() => {
           this.storeUsername(values[0]);
-          this.userLogin(newUserEntry).then(() => {
-            this.createUserProfile({ userId: this.guid(), username: values[0], mail: values[1] });
+          this.userLogin(newUserEntry).then(authObject => {
+            this.createUserProfile({ userId: authObject.user.uid, username: values[0], mail: values[1] });
           });
         });
       },

@@ -56,24 +56,23 @@
       goToHome(){
         this.$router.push('/');
       },
-      fetchInitialUserInfo(mail)  {
+      fetchInitialUserInfo(uid)  {
         console.log('fetching user info...');
-        firebase.database().ref('users/').on("value", (userObject) => {
-          this.storeNumberOfUsers({ value: userObject.numChildren() });
-          if (userObject.val()) {
-            Object.values(userObject.val()).forEach((user) => {
-              if (user.mail.toLowerCase() === mail.toLowerCase()) {
-                console.log('user found!');
-                localStorage.setItem('userId', user.userId);
-                this.setBookList({ value: user.books || [] });
-                this.username = user.username;
-                this.setLoginUsername({ value: user.username });
-                this.setUserId({ value: user.userId });
-                bus.$emit('login', user.username);
-              }
-            });
-          }
-      });},
+        firebase.database().ref('aggregation/').on('value', (userObject) => {
+          this.storeNumberOfUsers({ value: userObject.val() ? userObject.val().totalUsers : 0 });
+        });
+        firebase.database().ref('users/' + uid).on('value', (snapshot) => {
+           const user = snapshot.val();
+           if (user) {
+             localStorage.setItem('userId', user.userId);
+             this.setBookList({ value: user.books || [] });
+             this.username = user.username;
+             this.setLoginUsername({ value: user.username });
+             this.setUserId({ value: user.userId });
+             bus.$emit('login', user.username);
+           }
+        });
+      },
       logout() {
         this.userLogout().then(() => {
           this.clearUserData();
@@ -95,7 +94,7 @@
           user = firebase.auth().currentUser;
           user.getIdToken().then(token => {
             localStorage.setItem('token', token);
-            vm.fetchInitialUserInfo(user.email);
+            vm.fetchInitialUserInfo(user.uid);
           });
         } else {
           console.log('loggedOut!');

@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 2%">
+  <div v-if="bookList.length" style="margin-top: 2%">
     <pagination v-if="bookList.length > pageLimit"
                 :page="page"
                 :page-limit="pageLimit"
@@ -25,11 +25,13 @@
       </div>
     </div>
   </div>
+  <no-book v-else/>
 </template>
 
 <script>
 import Book from './Book.vue';
 import Pagination from '@/components/shared/Pagination';
+import NoBook from '@/components/shared/NoBook';
 
 export default{
   name: 'book-list',
@@ -39,7 +41,8 @@ export default{
   },
   components: {
     Book,
-    Pagination
+    Pagination,
+    NoBook
   },
   data () {
     return {

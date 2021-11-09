@@ -83,6 +83,11 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    updateUserCount({ commit, state }) {
+      return firebase.database().ref('aggregation/').update({
+        totalUsers: firebase.database.ServerValue.increment(1)
+      });
+    },
     fetchBookRatings({ commit, state }) {
       const bookEntry = firebase.database().ref('books/').on("value", (bookObject) => {
         commit({ type: 'setRatings', value: bookObject.val() });
@@ -178,13 +183,14 @@ export default new Vuex.Store({
           commit({ type: 'setRegisterErrorMessage', value: error.message });
         });
     },
-    createUserProfile({ commit }, payload) {
+    createUserProfile({ commit, dispatch }, payload) {
       return firebase.database().ref('users/' + payload.userId).set({
         userId: payload.userId,
         username: payload.username,
         mail: payload.mail,
         books: [],
       }).then(() => {
+        dispatch('updateUserCount');
         firebase.auth().currentUser.updateProfile({
           displayName: payload.username,
         }).catch((error) => {
